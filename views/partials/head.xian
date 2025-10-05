@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full">
+<!DOCTYPE html>    <script src="/js/search-manager.js"></script>
+    <script src="/js/notification-manager.js"></script>
+  <script>
+    window.APP = { };
+  </script>ml lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +15,9 @@
   <script src="/js/table-enhancements.js"></script>
   <script src="/js/calendar-system.js"></script>
   <script src="/js/conflict-detector.js"></script>
+  <script src="/js/accessibility-manager.js"></script>
+  <script src="/js/theme-manager.js"></script>
+  <script src="/js/search-manager.js"></script>
   <script>
     window.APP = { };
   </script>

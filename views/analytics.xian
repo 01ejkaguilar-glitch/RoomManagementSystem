@@ -1,0 +1,587 @@
+{{> layouts/base pageTitle="Analytics Dashboard" activePage="analytics"}}
+
+{{#contentFor "content"}}
+<section>
+  <!-- Dashboard Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-2xl font-bold">Analytics Dashboard</h2>
+      <p class="text-gray-600">Comprehensive insights into room utilization and scheduling</p>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <!-- Date Range Selector -->
+      <div class="flex items-center gap-2">
+        <label class="text-sm font-medium text-gray-700">Period:</label>
+        <select id="dateRange" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40">
+          <option value="today">Today</option>
+          <option value="week" selected>This Week</option>
+          <option value="month">This Month</option>
+          <option value="semester">This Semester</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+      
+      <!-- Export Options -->
+      <button onclick="exportReport()" class="btn text-gray-600 border border-gray-300">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        Export Report
+      </button>
+    </div>
+  </div>
+  
+  <!-- Key Metrics Cards -->
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+    <div class="card">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Room Utilization</p>
+          <p class="text-2xl font-bold text-brand" id="overallUtilization">78.5%</p>
+          <p class="text-xs text-green-600 flex items-center mt-1">
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            +5.2% from last week
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Total Classes</p>
+          <p class="text-2xl font-bold text-green-600" id="totalClasses">324</p>
+          <p class="text-xs text-green-600 flex items-center mt-1">
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            +12 this week
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v16a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Active Faculty</p>
+          <p class="text-2xl font-bold text-purple-600" id="activeFaculty">48</p>
+          <p class="text-xs text-red-600 flex items-center mt-1">
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            -2 from last week
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Peak Hours</p>
+          <p class="text-2xl font-bold text-orange-600" id="peakHours">10-11 AM</p>
+          <p class="text-xs text-gray-600 mt-1">
+            92% utilization
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Charts Row -->
+  <div class="grid gap-6 lg:grid-cols-2 mb-8">
+    <!-- Room Utilization Chart -->
+    <div class="card">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">Room Utilization Trends</h3>
+        <div class="flex items-center gap-2">
+          <button class="text-sm text-gray-600 hover:text-brand" onclick="changeChartView('daily')">Daily</button>
+          <button class="text-sm text-brand font-medium" onclick="changeChartView('weekly')">Weekly</button>
+          <button class="text-sm text-gray-600 hover:text-brand" onclick="changeChartView('monthly')">Monthly</button>
+        </div>
+      </div>
+      <div class="h-64" id="utilizationChart">
+        <!-- Chart will be rendered here -->
+        <canvas id="utilizationCanvas" width="400" height="200"></canvas>
+      </div>
+    </div>
+    
+    <!-- Room Distribution Chart -->
+    <div class="card">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">Room Type Distribution</h3>
+        <button class="text-sm text-gray-600 hover:text-brand" onclick="toggleChartType()">Toggle View</button>
+      </div>
+      <div class="h-64" id="distributionChart">
+        <canvas id="distributionCanvas" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Detailed Analytics Tables -->
+  <div class="grid gap-6 lg:grid-cols-3 mb-8">
+    <!-- Top Utilized Rooms -->
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Most Utilized Rooms</h3>
+      <div class="space-y-3" id="topRooms">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Room 201</div>
+            <div class="text-sm text-gray-600">Main Building</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">95%</div>
+            <div class="text-xs text-gray-500">38h/week</div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Lab 301</div>
+            <div class="text-sm text-gray-600">Engineering</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">87%</div>
+            <div class="text-xs text-gray-500">35h/week</div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Room 105</div>
+            <div class="text-sm text-gray-600">Science Building</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">82%</div>
+            <div class="text-xs text-gray-500">33h/week</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Faculty Workload -->
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Faculty Workload</h3>
+      <div class="space-y-3" id="facultyWorkload">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Dr. Smith</div>
+            <div class="text-sm text-gray-600">Computer Science</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-green-600">18h</div>
+            <div class="text-xs text-gray-500">6 classes</div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Prof. Johnson</div>
+            <div class="text-sm text-gray-600">Mathematics</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-yellow-600">22h</div>
+            <div class="text-xs text-gray-500">8 classes</div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Dr. Williams</div>
+            <div class="text-sm text-gray-600">Physics</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-red-600">25h</div>
+            <div class="text-xs text-gray-500">9 classes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Building Performance -->
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Building Performance</h3>
+      <div class="space-y-3" id="buildingPerformance">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Main Building</div>
+            <div class="text-sm text-gray-600">3 rooms</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">85%</div>
+            <div class="w-16 bg-gray-200 rounded-full h-2 mt-1">
+              <div class="bg-brand h-2 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Science Building</div>
+            <div class="text-sm text-gray-600">3 rooms</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">78%</div>
+            <div class="w-16 bg-gray-200 rounded-full h-2 mt-1">
+              <div class="bg-brand h-2 rounded-full" style="width: 78%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Engineering</div>
+            <div class="text-sm text-gray-600">3 rooms</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-brand">72%</div>
+            <div class="w-16 bg-gray-200 rounded-full h-2 mt-1">
+              <div class="bg-brand h-2 rounded-full" style="width: 72%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Time Analysis -->
+  <div class="grid gap-6 lg:grid-cols-2">
+    <!-- Hourly Usage Heatmap -->
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Weekly Usage Heatmap</h3>
+      <div class="overflow-x-auto">
+        <div class="heatmap-container" id="usageHeatmap">
+          <!-- Heatmap will be generated here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scheduling Insights -->
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-4">Scheduling Insights</h3>
+      <div class="space-y-4">
+        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+          <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+          <div>
+            <div class="font-medium text-blue-900">Peak Usage Period</div>
+            <div class="text-sm text-blue-700">Monday-Wednesday 10-12 PM shows highest room demand</div>
+          </div>
+        </div>
+        
+        <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+          <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+          <div>
+            <div class="font-medium text-green-900">Optimization Opportunity</div>
+            <div class="text-sm text-green-700">Friday afternoons have 40% available capacity</div>
+          </div>
+        </div>
+        
+        <div class="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
+          <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+          <div>
+            <div class="font-medium text-yellow-900">Resource Alert</div>
+            <div class="text-sm text-yellow-700">Lab 301 approaching maximum capacity limits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.heatmap-container {
+  font-size: 12px;
+}
+
+.heatmap-cell {
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+  margin: 1px;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+  font-weight: 500;
+}
+
+.heatmap-low { background-color: #e5f3ff; color: #1e40af; }
+.heatmap-medium { background-color: #3b82f6; }
+.heatmap-high { background-color: #1e40af; }
+.heatmap-very-high { background-color: #0c1e57; }
+
+.chart-container {
+  position: relative;
+  height: 200px;
+}
+</style>
+
+<script>
+// Analytics data and chart management
+const analyticsData = {
+  utilization: {
+    daily: [65, 72, 78, 85, 82, 75, 68],
+    weekly: [78, 82, 75, 88, 79, 83, 76],
+    monthly: [75, 78, 82, 85, 79, 83, 87, 84, 81, 86, 88, 85]
+  },
+  roomTypes: {
+    'Lecture Halls': 40,
+    'Laboratories': 30,
+    'Classrooms': 25,
+    'Conference Rooms': 5
+  },
+  usageHeatmap: [
+    ['7', '8', '9', '10', '11', '12', '1', '2', '3', '4', '5', '6'],
+    ['Mon', 20, 45, 80, 95, 85, 30, 70, 75, 60, 40, 25, 10],
+    ['Tue', 25, 50, 85, 90, 80, 35, 75, 70, 65, 45, 30, 15],
+    ['Wed', 30, 55, 90, 95, 85, 25, 80, 75, 70, 50, 35, 20],
+    ['Thu', 25, 50, 85, 90, 80, 30, 75, 70, 65, 45, 30, 15],
+    ['Fri', 20, 40, 70, 80, 70, 25, 60, 55, 45, 30, 20, 10]
+  ]
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  initializeCharts();
+  generateHeatmap();
+  
+  // Update charts when date range changes
+  document.getElementById('dateRange').addEventListener('change', function() {
+    updateAnalytics(this.value);
+  });
+});
+
+function initializeCharts() {
+  // Simple chart implementation using Canvas
+  drawUtilizationChart();
+  drawDistributionChart();
+}
+
+function drawUtilizationChart() {
+  const canvas = document.getElementById('utilizationCanvas');
+  const ctx = canvas.getContext('2d');
+  const data = analyticsData.utilization.weekly;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Set up chart dimensions
+  const padding = 40;
+  const chartWidth = canvas.width - (padding * 2);
+  const chartHeight = canvas.height - (padding * 2);
+  
+  // Draw grid lines
+  ctx.strokeStyle = '#e5e7eb';
+  ctx.lineWidth = 1;
+  
+  for (let i = 0; i <= 5; i++) {
+    const y = padding + (chartHeight / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(canvas.width - padding, y);
+    ctx.stroke();
+  }
+  
+  // Draw data line
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  
+  data.forEach((value, index) => {
+    const x = padding + (chartWidth / (data.length - 1)) * index;
+    const y = padding + chartHeight - (value / 100) * chartHeight;
+    
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  
+  ctx.stroke();
+  
+  // Draw data points
+  ctx.fillStyle = '#3b82f6';
+  data.forEach((value, index) => {
+    const x = padding + (chartWidth / (data.length - 1)) * index;
+    const y = padding + chartHeight - (value / 100) * chartHeight;
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+  
+  // Draw labels
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  data.forEach((value, index) => {
+    const x = padding + (chartWidth / (data.length - 1)) * index;
+    ctx.fillText(days[index], x, canvas.height - 10);
+  });
+}
+
+function drawDistributionChart() {
+  const canvas = document.getElementById('distributionCanvas');
+  const ctx = canvas.getContext('2d');
+  const data = analyticsData.roomTypes;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = 80;
+  
+  const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+  
+  let currentAngle = 0;
+  Object.entries(data).forEach(([label, value], index) => {
+    const sliceAngle = (value / total) * 2 * Math.PI;
+    
+    // Draw slice
+    ctx.fillStyle = colors[index];
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw label
+    const labelAngle = currentAngle + sliceAngle / 2;
+    const labelX = centerX + Math.cos(labelAngle) * (radius + 20);
+    const labelY = centerY + Math.sin(labelAngle) * (radius + 20);
+    
+    ctx.fillStyle = '#374151';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, labelX, labelY);
+    ctx.fillText(`${value}%`, labelX, labelY + 15);
+    
+    currentAngle += sliceAngle;
+  });
+}
+
+function generateHeatmap() {
+  const container = document.getElementById('usageHeatmap');
+  const data = analyticsData.usageHeatmap;
+  
+  let html = '<div class="grid grid-cols-13 gap-1 text-center">';
+  
+  // Generate heatmap grid
+  data.forEach((row, rowIndex) => {
+    row.forEach((cell, cellIndex) => {
+      if (rowIndex === 0) {
+        // Header row (hours)
+        html += `<div class="text-xs font-medium text-gray-600 p-1">${cell}</div>`;
+      } else if (cellIndex === 0) {
+        // Day labels
+        html += `<div class="text-xs font-medium text-gray-600 p-1">${cell}</div>`;
+      } else {
+        // Data cells
+        const intensity = cell > 80 ? 'very-high' : cell > 60 ? 'high' : cell > 30 ? 'medium' : 'low';
+        html += `<div class="heatmap-cell heatmap-${intensity}" title="${cell}% utilization">${cell}</div>`;
+      }
+    });
+  });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function changeChartView(view) {
+  // Update chart data based on view
+  console.log(`Changing chart view to: ${view}`);
+  drawUtilizationChart();
+}
+
+function toggleChartType() {
+  // Toggle between pie chart and bar chart
+  console.log('Toggling chart type');
+  drawDistributionChart();
+}
+
+function updateAnalytics(period) {
+  // Update all analytics based on selected period
+  console.log(`Updating analytics for period: ${period}`);
+  
+  // Update metrics
+  const metrics = {
+    today: { utilization: '68.2%', classes: 28, faculty: 15, peak: '2-3 PM' },
+    week: { utilization: '78.5%', classes: 324, faculty: 48, peak: '10-11 AM' },
+    month: { utilization: '82.1%', classes: 1250, faculty: 52, peak: '10-11 AM' },
+    semester: { utilization: '79.8%', classes: 4800, faculty: 55, peak: '10-11 AM' },
+    year: { utilization: '81.2%', classes: 9600, faculty: 58, peak: '10-11 AM' }
+  };
+  
+  const data = metrics[period];
+  if (data) {
+    document.getElementById('overallUtilization').textContent = data.utilization;
+    document.getElementById('totalClasses').textContent = data.classes;
+    document.getElementById('activeFaculty').textContent = data.faculty;
+    document.getElementById('peakHours').textContent = data.peak;
+  }
+  
+  // Redraw charts
+  drawUtilizationChart();
+  drawDistributionChart();
+}
+
+function exportReport() {
+  // Generate and download analytics report
+  const reportData = {
+    period: document.getElementById('dateRange').value,
+    generated: new Date().toISOString(),
+    metrics: {
+      utilization: document.getElementById('overallUtilization').textContent,
+      totalClasses: document.getElementById('totalClasses').textContent,
+      activeFaculty: document.getElementById('activeFaculty').textContent,
+      peakHours: document.getElementById('peakHours').textContent
+    }
+  };
+  
+  // Create downloadable JSON report (in a real app, this would generate PDF/Excel)
+  const dataStr = JSON.stringify(reportData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `analytics-report-${reportData.period}-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  
+  URL.revokeObjectURL(url);
+  
+  // Show success message
+  if (window.accessibilityManager) {
+    window.accessibilityManager.announce('Analytics report exported successfully');
+  }
+}
+</script>
+{{/contentFor}}
