@@ -1,25 +1,75 @@
-<!DOCTYPE html>    <script src="/js/search-manager.js"></script>
-    <script src="/js/notification-manager.js"></script>
-    <script src="/js/performance-monitor.js"></script>
-  <script>
-    window.APP = { };
-  </script>ml lang="en" class="h-full">
+<!DOCTYPE html>
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{{ title }} | Room Management System</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/public/manifest.json">
+  <meta name="application-name" content="Room Management System">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="RMS">
+  <meta name="description" content="MinSU Room Management System - Schedule and manage rooms efficiently">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#2C5D2B">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="/public/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/public/icons/icon-72.png">
+  <link rel="apple-touch-icon" sizes="96x96" href="/public/icons/icon-96.png">
+  <link rel="apple-touch-icon" sizes="128x128" href="/public/icons/icon-128.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/public/icons/icon-144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/public/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/public/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="384x384" href="/public/icons/icon-384.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="/public/icons/icon-512.png">
+  
+  <!-- Standard Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/icon-16.png">
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Styles -->
   <link rel="stylesheet" href="/css/app.css" />
+  
+  <!-- Core JavaScript Modules -->
+  <script src="/js/performance-monitor.js"></script>
+  <script src="/js/accessibility-manager.js"></script>
+  <script src="/js/theme-manager.js"></script>
+  <script src="/js/notification-manager.js"></script>
   <script src="/js/modal-system.js"></script>
+  
+  <!-- Feature Enhancement Modules -->
+  <script src="/js/animation-system.js"></script>
+  <script src="/js/data-density-manager.js"></script>
+  <script src="/js/mobile-navigation-manager.js"></script>
+  <script src="/js/pwa-manager.js"></script>
+  <script src="/js/contextual-help-manager.js"></script>
+  
+  <!-- Application Modules -->
+  <script src="/js/search-manager.js"></script>
   <script src="/js/table-enhancements.js"></script>
   <script src="/js/calendar-system.js"></script>
   <script src="/js/conflict-detector.js"></script>
-  <script src="/js/accessibility-manager.js"></script>
-  <script src="/js/theme-manager.js"></script>
-  <script src="/js/search-manager.js"></script>
+  
+  <!-- App Configuration -->
   <script>
-    window.APP = { };
+    window.APP = {
+      version: '2.0.0',
+      features: {
+        animations: true,
+        dataDensity: true,
+        mobileNavigation: true,
+        pwa: true,
+        contextualHelp: true
+      }
+    };
   </script>
 </head>
