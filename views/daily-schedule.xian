@@ -1,0 +1,619 @@
+{{> layouts/base pageTitle="Daily Schedule" activePage="schedules"}}
+
+{{#contentFor "content"}}
+<section>
+  <!-- Daily Navigation -->
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-4">
+      <h2 class="text-2xl font-bold">Daily Schedule</h2>
+      <div class="flex items-center gap-2">
+        <button class="btn text-gray-600 border border-gray-300" onclick="navigateDay('prev')">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <button class="btn text-gray-600 border border-gray-300" onclick="navigateDay('today')">Today</button>
+        <button class="btn text-gray-600 border border-gray-300" onclick="navigateDay('next')">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="date" id="datePicker" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40">
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <select id="roomFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40">
+        <option value="all">All Rooms</option>
+        <option value="main">Main Building</option>
+        <option value="science">Science Building</option>
+        <option value="engineering">Engineering Building</option>
+      </select>
+      <button onclick="exportDailySchedule()" class="btn text-gray-600 border border-gray-300">Export</button>
+      <button onclick="openModal('scheduleModal')" class="btn btn-primary">+ Add Schedule</button>
+    </div>
+  </div>
+  
+  <!-- Current Date Display -->
+  <div class="bg-gradient-to-r from-brand to-brand-accent rounded-xl p-6 text-white mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-2xl font-bold" id="currentDateDisplay"></h3>
+        <p class="text-brand-light" id="currentDayDisplay"></p>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-bold" id="scheduleCount">8</div>
+        <div class="text-brand-light">Classes Today</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Day Statistics -->
+  <div class="grid gap-4 md:grid-cols-4 mb-6">
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500">Room Utilization</p>
+          <p class="text-2xl font-semibold mt-1" id="dayUtilization">72%</p>
+        </div>
+        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500">Active Faculty</p>
+          <p class="text-2xl font-semibold mt-1" id="activeFaculty">12</p>
+        </div>
+        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500">Peak Hour</p>
+          <p class="text-2xl font-semibold mt-1" id="peakHour">10-11 AM</p>
+        </div>
+        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500">Available Rooms</p>
+          <p class="text-2xl font-semibold mt-1" id="availableRooms">3/10</p>
+        </div>
+        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Schedule View -->
+  <div class="grid lg:grid-cols-3 gap-6">
+    <!-- Time-based Schedule -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b bg-gray-50">
+          <h3 class="font-semibold text-lg">Timeline View</h3>
+          <p class="text-sm text-gray-600">Hourly breakdown of scheduled classes</p>
+        </div>
+        
+        <div class="schedule-timeline" id="scheduleTimeline">
+          <!-- Generated by JavaScript -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Room Status Sidebar -->
+    <div class="space-y-6">
+      <!-- Current Time Indicator -->
+      <div class="bg-white rounded-xl shadow-sm p-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-brand" id="currentTime"></div>
+          <div class="text-sm text-gray-600">Current Time</div>
+        </div>
+      </div>
+      
+      <!-- Room Status -->
+      <div class="bg-white rounded-xl shadow-sm">
+        <div class="p-4 border-b">
+          <h3 class="font-semibold">Room Status</h3>
+        </div>
+        <div class="divide-y" id="roomStatusList">
+          <!-- Generated by JavaScript -->
+        </div>
+      </div>
+      
+      <!-- Upcoming Classes -->
+      <div class="bg-white rounded-xl shadow-sm">
+        <div class="p-4 border-b">
+          <h3 class="font-semibold">Next Classes</h3>
+        </div>
+        <div class="divide-y" id="upcomingClasses">
+          <!-- Generated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Room Utilization Chart -->
+  <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
+    <h3 class="text-lg font-semibold mb-4">Hourly Room Utilization</h3>
+    <div class="utilization-chart" id="utilizationChart">
+      <!-- Simple bar chart showing room usage by hour -->
+      <div class="grid grid-cols-12 gap-2 h-32">
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-16 rounded-t" data-hour="7" title="7 AM: 2 rooms"></div>
+          <div class="text-xs text-center mt-1">7</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-20 rounded-t" data-hour="8" title="8 AM: 3 rooms"></div>
+          <div class="text-xs text-center mt-1">8</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-24 rounded-t" data-hour="9" title="9 AM: 4 rooms"></div>
+          <div class="text-xs text-center mt-1">9</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-32 rounded-t" data-hour="10" title="10 AM: 6 rooms"></div>
+          <div class="text-xs text-center mt-1">10</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-28 rounded-t" data-hour="11" title="11 AM: 5 rooms"></div>
+          <div class="text-xs text-center mt-1">11</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-gray-300 h-8 rounded-t" data-hour="12" title="12 PM: 1 room"></div>
+          <div class="text-xs text-center mt-1">12</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-24 rounded-t" data-hour="13" title="1 PM: 4 rooms"></div>
+          <div class="text-xs text-center mt-1">1</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-20 rounded-t" data-hour="14" title="2 PM: 3 rooms"></div>
+          <div class="text-xs text-center mt-1">2</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-28 rounded-t" data-hour="15" title="3 PM: 5 rooms"></div>
+          <div class="text-xs text-center mt-1">3</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-brand h-16 rounded-t" data-hour="16" title="4 PM: 2 rooms"></div>
+          <div class="text-xs text-center mt-1">4</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-gray-300 h-12 rounded-t" data-hour="17" title="5 PM: 1 room"></div>
+          <div class="text-xs text-center mt-1">5</div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <div class="bg-gray-300 h-4 rounded-t" data-hour="18" title="6 PM: 0 rooms"></div>
+          <div class="text-xs text-center mt-1">6</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule Modal -->
+{{> modal modalId="scheduleModal" title="Add New Schedule" subtitle="Create a new class schedule" width="lg" showFooter=false}}
+
+<!-- Class Detail Modal -->
+{{> modal modalId="classDetailModal" title="Class Details" width="md" showFooter=false}}
+
+<style>
+.schedule-timeline {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.time-slot {
+  min-height: 80px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+}
+
+.time-slot:hover {
+  background-color: #f9fafb;
+}
+
+.time-slot.current-time {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+}
+
+.schedule-event {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.schedule-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.room-status-occupied {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.room-status-available {
+  background-color: #f0fdf4;
+  border-left: 4px solid #22c55e;
+}
+
+.utilization-chart .bg-brand:hover {
+  background-color: #1e40af;
+  cursor: pointer;
+}
+</style>
+
+<script>
+// Daily schedule data
+const dailySchedules = [
+  {
+    id: 1,
+    subjectCode: 'ENG101',
+    subjectTitle: 'English Composition',
+    faculty: 'Prof. Davis',
+    roomName: 'Room 102',
+    building: 'Main Building',
+    startTime: '08:00',
+    endTime: '09:30',
+    status: 'Active',
+    students: 25
+  },
+  {
+    id: 2,
+    subjectCode: 'CS101',
+    subjectTitle: 'Computer Science Fundamentals',
+    faculty: 'Dr. Smith',
+    roomName: 'Room 201',
+    building: 'Main Building',
+    startTime: '09:00',
+    endTime: '10:30',
+    status: 'Active',
+    students: 30
+  },
+  {
+    id: 3,
+    subjectCode: 'MATH202',
+    subjectTitle: 'Calculus II',
+    faculty: 'Prof. Johnson',
+    roomName: 'Room 105',
+    building: 'Science Building',
+    startTime: '11:00',
+    endTime: '12:30',
+    status: 'Active',
+    students: 28
+  },
+  {
+    id: 4,
+    subjectCode: 'CHEM201',
+    subjectTitle: 'Organic Chemistry',
+    faculty: 'Dr. Brown',
+    roomName: 'Lab 201',
+    building: 'Science Building',
+    startTime: '13:00',
+    endTime: '15:00',
+    status: 'Active',
+    students: 20
+  },
+  {
+    id: 5,
+    subjectCode: 'PHY301',
+    subjectTitle: 'Physics Laboratory',
+    faculty: 'Dr. Williams',
+    roomName: 'Lab 301',
+    building: 'Engineering Building',
+    startTime: '14:00',
+    endTime: '17:00',
+    status: 'Active',
+    students: 18
+  }
+];
+
+const rooms = [
+  { name: 'Room 101', building: 'Main Building', capacity: 30, type: 'Lecture Hall' },
+  { name: 'Room 102', building: 'Main Building', capacity: 25, type: 'Classroom' },
+  { name: 'Room 201', building: 'Main Building', capacity: 40, type: 'Lecture Hall' },
+  { name: 'Room 105', building: 'Science Building', capacity: 45, type: 'Classroom' },
+  { name: 'Lab 201', building: 'Science Building', capacity: 20, type: 'Laboratory' },
+  { name: 'Lab 202', building: 'Science Building', capacity: 20, type: 'Laboratory' },
+  { name: 'Lab 301', building: 'Engineering Building', capacity: 20, type: 'Laboratory' },
+  { name: 'Lab 302', building: 'Engineering Building', capacity: 25, type: 'Laboratory' },
+  { name: 'Room 350', building: 'Engineering Building', capacity: 60, type: 'Lecture Hall' }
+];
+
+let currentDate = new Date();
+
+document.addEventListener('DOMContentLoaded', function() {
+  updateCurrentTime();
+  setInterval(updateCurrentTime, 60000); // Update every minute
+  
+  renderDailySchedule();
+  updateDateDisplay();
+  renderRoomStatus();
+  renderUpcomingClasses();
+  
+  // Set up date picker
+  const datePicker = document.getElementById('datePicker');
+  datePicker.value = currentDate.toISOString().split('T')[0];
+  datePicker.addEventListener('change', function() {
+    currentDate = new Date(this.value);
+    renderDailySchedule();
+    updateDateDisplay();
+  });
+  
+  // Load schedule form
+  const scheduleModal = document.getElementById('scheduleModal');
+  if (scheduleModal) {
+    const contentSlot = scheduleModal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      contentSlot.innerHTML = `{{> forms/scheduleForm}}`;
+    }
+  }
+});
+
+function updateCurrentTime() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+  document.getElementById('currentTime').textContent = timeString;
+}
+
+function renderDailySchedule() {
+  const timeline = document.getElementById('scheduleTimeline');
+  timeline.innerHTML = '';
+  
+  for (let hour = 7; hour < 19; hour++) {
+    const timeSlot = document.createElement('div');
+    timeSlot.className = 'time-slot flex items-start p-4';
+    
+    // Check if this is the current hour
+    const now = new Date();
+    if (now.getHours() === hour && isToday(currentDate)) {
+      timeSlot.classList.add('current-time');
+    }
+    
+    const timeString = formatHour(hour);
+    const slotSchedules = getSchedulesForHour(hour);
+    
+    timeSlot.innerHTML = `
+      <div class="w-20 flex-shrink-0">
+        <div class="text-sm font-medium text-gray-700">${timeString}</div>
+      </div>
+      <div class="flex-1 space-y-2">
+        ${slotSchedules.length > 0 ? 
+          slotSchedules.map(schedule => renderScheduleEvent(schedule)).join('') :
+          '<div class="text-sm text-gray-500 italic">No classes scheduled</div>'
+        }
+      </div>
+    `;
+    
+    timeline.appendChild(timeSlot);
+  }
+}
+
+function renderScheduleEvent(schedule) {
+  const statusColors = {
+    'Active': 'bg-green-100 text-green-800 border-green-200',
+    'Pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    'Cancelled': 'bg-red-100 text-red-800 border-red-200'
+  };
+  
+  const colorClass = statusColors[schedule.status] || 'bg-blue-100 text-blue-800 border-blue-200';
+  
+  return `
+    <div class="schedule-event ${colorClass} border rounded-lg p-3 cursor-pointer"
+         onclick="showClassDetails(${JSON.stringify(schedule).replace(/"/g, '&quot;')})">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <div class="font-semibold">${schedule.subjectCode} - ${schedule.subjectTitle}</div>
+          <div class="text-sm opacity-75 mt-1">
+            <div>${schedule.faculty}</div>
+            <div>${schedule.roomName} - ${schedule.building}</div>
+            <div>${schedule.students} students</div>
+          </div>
+        </div>
+        <div class="text-sm font-medium">${schedule.startTime} - ${schedule.endTime}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRoomStatus() {
+  const roomList = document.getElementById('roomStatusList');
+  const now = new Date();
+  const currentHour = now.getHours();
+  
+  roomList.innerHTML = '';
+  
+  rooms.forEach(room => {
+    const isOccupied = isRoomOccupied(room.name, currentHour);
+    const statusClass = isOccupied ? 'room-status-occupied' : 'room-status-available';
+    const statusText = isOccupied ? 'Occupied' : 'Available';
+    const statusBadge = isOccupied ? 'badge-red' : 'badge-green';
+    
+    const roomElement = document.createElement('div');
+    roomElement.className = `${statusClass} p-3`;
+    roomElement.innerHTML = `
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">${room.name}</div>
+          <div class="text-sm text-gray-600">${room.building} • ${room.capacity} seats</div>
+        </div>
+        <span class="badge ${statusBadge}">${statusText}</span>
+      </div>
+    `;
+    
+    roomList.appendChild(roomElement);
+  });
+}
+
+function renderUpcomingClasses() {
+  const upcomingList = document.getElementById('upcomingClasses');
+  const now = new Date();
+  const currentTime = now.getHours() * 60 + now.getMinutes();
+  
+  const upcoming = dailySchedules
+    .filter(schedule => {
+      const [hour, minute] = schedule.startTime.split(':').map(Number);
+      const scheduleTime = hour * 60 + minute;
+      return scheduleTime > currentTime;
+    })
+    .sort((a, b) => {
+      const [aHour, aMinute] = a.startTime.split(':').map(Number);
+      const [bHour, bMinute] = b.startTime.split(':').map(Number);
+      return (aHour * 60 + aMinute) - (bHour * 60 + bMinute);
+    })
+    .slice(0, 3);
+  
+  upcomingList.innerHTML = '';
+  
+  if (upcoming.length === 0) {
+    upcomingList.innerHTML = '<div class="p-3 text-sm text-gray-500 italic">No upcoming classes</div>';
+    return;
+  }
+  
+  upcoming.forEach(schedule => {
+    const classElement = document.createElement('div');
+    classElement.className = 'p-3 hover:bg-gray-50 cursor-pointer';
+    classElement.innerHTML = `
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium text-sm">${schedule.subjectCode}</div>
+          <div class="text-xs text-gray-600">${schedule.roomName}</div>
+        </div>
+        <div class="text-xs text-gray-500">${schedule.startTime}</div>
+      </div>
+    `;
+    
+    classElement.addEventListener('click', () => showClassDetails(schedule));
+    upcomingList.appendChild(classElement);
+  });
+}
+
+function showClassDetails(schedule) {
+  const modal = document.getElementById('classDetailModal');
+  const contentSlot = modal.querySelector('.modal-content-slot');
+  
+  contentSlot.innerHTML = `
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-lg font-semibold text-brand">${schedule.subjectCode}</h3>
+        <p class="text-gray-600">${schedule.subjectTitle}</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="space-y-2">
+          <div><span class="font-medium">Faculty:</span> ${schedule.faculty}</div>
+          <div><span class="font-medium">Room:</span> ${schedule.roomName}</div>
+          <div><span class="font-medium">Building:</span> ${schedule.building}</div>
+        </div>
+        <div class="space-y-2">
+          <div><span class="font-medium">Time:</span> ${schedule.startTime} - ${schedule.endTime}</div>
+          <div><span class="font-medium">Students:</span> ${schedule.students}</div>
+          <div><span class="font-medium">Status:</span> <span class="badge badge-green">${schedule.status}</span></div>
+        </div>
+      </div>
+      
+      <div class="flex gap-2 pt-4 border-t">
+        <button onclick="editSchedule(${schedule.id})" class="btn btn-primary">Edit Class</button>
+        <button onclick="closeModal('classDetailModal')" class="btn text-gray-600 border border-gray-300">Close</button>
+      </div>
+    </div>
+  `;
+  
+  openModal('classDetailModal');
+}
+
+function getSchedulesForHour(hour) {
+  return dailySchedules.filter(schedule => {
+    const [startHour] = schedule.startTime.split(':').map(Number);
+    const [endHour] = schedule.endTime.split(':').map(Number);
+    return hour >= startHour && hour < endHour;
+  });
+}
+
+function isRoomOccupied(roomName, hour) {
+  return dailySchedules.some(schedule => {
+    const [startHour] = schedule.startTime.split(':').map(Number);
+    const [endHour] = schedule.endTime.split(':').map(Number);
+    return schedule.roomName === roomName && hour >= startHour && hour < endHour;
+  });
+}
+
+function navigateDay(direction) {
+  switch (direction) {
+    case 'prev':
+      currentDate.setDate(currentDate.getDate() - 1);
+      break;
+    case 'next':
+      currentDate.setDate(currentDate.getDate() + 1);
+      break;
+    case 'today':
+      currentDate = new Date();
+      break;
+  }
+  
+  document.getElementById('datePicker').value = currentDate.toISOString().split('T')[0];
+  renderDailySchedule();
+  updateDateDisplay();
+  renderRoomStatus();
+  renderUpcomingClasses();
+}
+
+function updateDateDisplay() {
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('currentDateDisplay').textContent = currentDate.toLocaleDateString('en-US', options);
+  
+  const dayOptions = { weekday: 'long' };
+  document.getElementById('currentDayDisplay').textContent = currentDate.toLocaleDateString('en-US', dayOptions);
+}
+
+function formatHour(hour) {
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:00 ${ampm}`;
+}
+
+function isToday(date) {
+  const today = new Date();
+  return date.toDateString() === today.toDateString();
+}
+
+function exportDailySchedule() {
+  alert('Export functionality will include PDF and Excel formats with detailed daily schedules!');
+}
+
+function editSchedule(scheduleId) {
+  closeModal('classDetailModal');
+  openModal('scheduleModal');
+}
+</script>
+{{/contentFor}}

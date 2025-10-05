@@ -1,5 +1,8 @@
 <!-- Schedule Form Partial -->
 <form id="scheduleForm" action="/schedules" method="POST" class="space-y-6">
+  <!-- Conflict Detection Alert Area -->
+  <div id="conflictAlerts" class="hidden space-y-2"></div>
+  
   <!-- Subject Information -->
   <div class="grid md:grid-cols-2 gap-4">
     <div>
@@ -354,15 +357,188 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      // For now, just simulate success and close modal
-      alert('Schedule saved successfully!');
-      closeModal('scheduleModal');
-      
-      // Refresh the page to show updated data
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      // Check for conflicts before saving
+      checkScheduleConflicts();
     });
   }
+  
+  // Initialize conflict detector
+  initConflictDetection();
 });
+
+// Initialize conflict detection system
+function initConflictDetection() {
+  // Sample existing schedules - in a real app, this would come from the server
+  const existingSchedules = [
+    {
+      id: 1,
+      subjectCode: 'CS101',
+      faculty: 'Dr. Smith',
+      roomName: 'Room 201',
+      startTime: '09:00',
+      endTime: '10:30',
+      days: ['Monday', 'Wednesday', 'Friday'],
+      maxStudents: 30
+    },
+    {
+      id: 2,
+      subjectCode: 'MATH202',
+      faculty: 'Prof. Johnson',
+      roomName: 'Room 105',
+      startTime: '11:00',
+      endTime: '12:30',
+      days: ['Tuesday', 'Thursday'],
+      maxStudents: 28
+    }
+  ];
+  
+  window.conflictDetector = new ConflictDetector(existingSchedules);
+  
+  // Add real-time conflict checking to form fields
+  const fieldsToWatch = ['schedule_faculty', 'schedule_room', 'schedule_start_time', 'schedule_end_time'];
+  const daysCheckboxes = document.querySelectorAll('input[name="days[]"]');
+  
+  fieldsToWatch.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener('change', debounce(checkCurrentConflicts, 500));
+    }
+  });
+  
+  daysCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', debounce(checkCurrentConflicts, 500));
+  });
+}
+
+// Check for conflicts with current form data
+function checkCurrentConflicts() {
+  const formData = getFormData();
+  if (!formData.faculty || !formData.roomName || !formData.startTime || !formData.endTime || formData.days.length === 0) {
+    clearConflictAlerts();
+    return;
+  }
+  
+  const validation = window.conflictDetector.validateSchedule(formData);
+  displayConflictResults(validation);
+}
+
+// Check conflicts before saving
+function checkScheduleConflicts() {
+  const formData = getFormData();
+  const validation = window.conflictDetector.validateSchedule(formData);
+  
+  if (!validation.isValid) {
+    displayConflictResults(validation);
+    return false;
+  }
+  
+  if (validation.warnings.length > 0) {
+    const proceed = confirm(
+      `Warning: ${validation.warnings.map(w => w.message).join(', ')}. \\n\\nDo you want to proceed anyway?`
+    );
+    
+    if (!proceed) return false;
+  }
+  
+  // For now, just simulate success and close modal
+  alert('Schedule saved successfully!');
+  closeModal('scheduleModal');
+  
+  // Refresh the page to show updated data
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+  
+  return true;
+}
+
+// Get current form data
+function getFormData() {
+  const selectedDays = Array.from(document.querySelectorAll('input[name="days[]"]:checked'))
+    .map(cb => cb.value);
+  
+  return {
+    subjectCode: document.getElementById('schedule_subject_code')?.value || '',
+    faculty: document.getElementById('schedule_faculty')?.value || '',
+    roomName: document.getElementById('schedule_room')?.value || '',
+    startTime: document.getElementById('schedule_start_time')?.value || '',
+    endTime: document.getElementById('schedule_end_time')?.value || '',
+    days: selectedDays,
+    maxStudents: parseInt(document.getElementById('schedule_max_students')?.value) || 0
+  };
+}
+
+// Display conflict detection results
+function displayConflictResults(validation) {
+  const alertsContainer = document.getElementById('conflictAlerts');
+  
+  if (validation.conflicts.length === 0 && validation.warnings.length === 0) {
+    clearConflictAlerts();
+    return;
+  }
+  
+  alertsContainer.innerHTML = '';
+  alertsContainer.classList.remove('hidden');
+  
+  // Display conflicts
+  validation.conflicts.forEach(conflict => {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `p-3 rounded-lg border ${ConflictUtils.getSeverityColor(conflict.severity)} border-current`;
+    alertDiv.innerHTML = `
+      <div class="flex items-start gap-2">
+        <div class="flex-shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <div class="font-medium">${ConflictUtils.formatConflictMessage(conflict)}</div>
+          <div class="text-sm mt-1">${conflict.details}</div>
+          ${conflict.suggestion ? `<div class="text-sm mt-1 italic">Suggestion: ${conflict.suggestion}</div>` : ''}
+        </div>
+      </div>
+    `;
+    alertsContainer.appendChild(alertDiv);
+  });
+  
+  // Display warnings
+  validation.warnings.forEach(warning => {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'p-3 rounded-lg border bg-yellow-50 text-yellow-800 border-yellow-200';
+    alertDiv.innerHTML = `
+      <div class="flex items-start gap-2">
+        <div class="flex-shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <div class="font-medium">${warning.message}</div>
+          ${warning.suggestion ? `<div class="text-sm mt-1 italic">${warning.suggestion}</div>` : ''}
+        </div>
+      </div>
+    `;
+    alertsContainer.appendChild(alertDiv);
+  });
+}
+
+// Clear conflict alerts
+function clearConflictAlerts() {
+  const alertsContainer = document.getElementById('conflictAlerts');
+  alertsContainer.innerHTML = '';
+  alertsContainer.classList.add('hidden');
+}
+
+// Debounce utility function
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 </script>

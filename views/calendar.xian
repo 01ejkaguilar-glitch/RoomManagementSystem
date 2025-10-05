@@ -1,0 +1,394 @@
+{{> layouts/base pageTitle="Calendar" activePage="calendar"}}
+
+{{#contentFor "content"}}
+<section>
+  <!-- Calendar Controls -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Schedule Calendar</h2>
+    
+    <div class="flex items-center gap-4">
+      <!-- Filter Controls -->
+      <div class="flex items-center gap-2">
+        <label class="text-sm font-medium text-gray-700">Filter by:</label>
+        <select id="buildingFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40">
+          <option value="all">All Buildings</option>
+          <option value="main">Main Building</option>
+          <option value="science">Science Building</option>
+          <option value="engineering">Engineering Building</option>
+        </select>
+        
+        <select id="facultyFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40">
+          <option value="all">All Faculty</option>
+          <option value="dr-smith">Dr. Smith</option>
+          <option value="prof-johnson">Prof. Johnson</option>
+          <option value="dr-williams">Dr. Williams</option>
+        </select>
+      </div>
+      
+      <!-- Quick Actions -->
+      <button onclick="openModal('scheduleModal')" class="btn btn-primary">+ Add Schedule</button>
+      <button onclick="exportCalendar()" class="btn text-gray-600 border border-gray-300">Export</button>
+    </div>
+  </div>
+  
+  <!-- Calendar Statistics -->
+  <div class="grid gap-4 md:grid-cols-4 mb-6">
+    <div class="card">
+      <p class="text-xs uppercase tracking-wide text-gray-500">Today's Classes</p>
+      <p class="text-2xl font-semibold mt-1" id="todayClassesCount">12</p>
+    </div>
+    <div class="card">
+      <p class="text-xs uppercase tracking-wide text-gray-500">Room Utilization</p>
+      <p class="text-2xl font-semibold mt-1 text-brand" id="roomUtilization">78%</p>
+    </div>
+    <div class="card">
+      <p class="text-xs uppercase tracking-wide text-gray-500">Active Faculty</p>
+      <p class="text-2xl font-semibold mt-1" id="activeFacultyCount">24</p>
+    </div>
+    <div class="card">
+      <p class="text-xs uppercase tracking-wide text-gray-500">Conflicts</p>
+      <p class="text-2xl font-semibold mt-1 text-red-600" id="conflictsCount">2</p>
+    </div>
+  </div>
+  
+  <!-- Calendar Container -->
+  <div id="calendarContainer" class="calendar-wrapper">
+    <!-- Calendar will be rendered here by JavaScript -->
+  </div>
+  
+  <!-- Quick Schedule Overview -->
+  <div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <!-- Today's Schedule -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold mb-4">Today's Schedule</h3>
+      <div class="space-y-3" id="todaySchedule">
+        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+          <div>
+            <div class="font-medium text-green-900">CS101 - Computer Science Fundamentals</div>
+            <div class="text-sm text-green-700">Dr. Smith • Room 201</div>
+          </div>
+          <div class="text-sm text-green-700">9:00 AM - 10:30 AM</div>
+        </div>
+        
+        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+          <div>
+            <div class="font-medium text-blue-900">MATH202 - Calculus II</div>
+            <div class="text-sm text-blue-700">Prof. Johnson • Room 105</div>
+          </div>
+          <div class="text-sm text-blue-700">11:00 AM - 12:30 PM</div>
+        </div>
+        
+        <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+          <div>
+            <div class="font-medium text-purple-900">PHY301 - Physics Laboratory</div>
+            <div class="text-sm text-purple-700">Dr. Williams • Lab 301</div>
+          </div>
+          <div class="text-sm text-purple-700">2:00 PM - 5:00 PM</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Room Status -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <h3 class="text-lg font-semibold mb-4">Room Status</h3>
+      <div class="space-y-3" id="roomStatus">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Room 201 - Main Building</div>
+            <div class="text-sm text-gray-600">Capacity: 30 students</div>
+          </div>
+          <span class="badge badge-red">Occupied</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Room 105 - Science Building</div>
+            <div class="text-sm text-gray-600">Capacity: 45 students</div>
+          </div>
+          <span class="badge badge-green">Available</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Lab 301 - Engineering Building</div>
+            <div class="text-sm text-gray-600">Capacity: 20 students</div>
+          </div>
+          <span class="badge badge-red">Occupied</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">Room 150 - Main Building</div>
+            <div class="text-sm text-gray-600">Capacity: 60 students</div>
+          </div>
+          <span class="badge badge-green">Available</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule Modal -->
+{{> modal modalId="scheduleModal" title="Add New Schedule" subtitle="Create a new class schedule" width="lg" showFooter=false}}
+
+<!-- Schedule Detail Modal -->
+{{> modal modalId="scheduleDetailModal" title="Schedule Details" width="md" showFooter=false}}
+
+<style>
+.calendar-wrapper {
+  min-height: 600px;
+}
+
+.calendar-system {
+  font-family: inherit;
+}
+
+.time-slot:hover {
+  background-color: #f9fafb;
+}
+
+.schedule-event {
+  transition: all 0.2s;
+}
+
+.schedule-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.month-day:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.calendar-header .btn {
+  min-width: auto;
+  padding: 0.5rem;
+}
+</style>
+
+<script>
+// Sample schedule data - in a real app, this would come from your backend
+const sampleSchedules = [
+  {
+    id: 1,
+    subjectCode: 'CS101',
+    subjectTitle: 'Computer Science Fundamentals',
+    faculty: 'Dr. Smith',
+    roomName: 'Room 201',
+    building: 'Main Building',
+    startTime: '09:00',
+    endTime: '10:30',
+    days: ['Monday', 'Wednesday', 'Friday'],
+    status: 'Active',
+    semester: '1st',
+    schoolYear: '2024-2025'
+  },
+  {
+    id: 2,
+    subjectCode: 'MATH202',
+    subjectTitle: 'Calculus II',
+    faculty: 'Prof. Johnson',
+    roomName: 'Room 105',
+    building: 'Science Building',
+    startTime: '11:00',
+    endTime: '12:30',
+    days: ['Tuesday', 'Thursday'],
+    status: 'Active',
+    semester: '1st',
+    schoolYear: '2024-2025'
+  },
+  {
+    id: 3,
+    subjectCode: 'PHY301',
+    subjectTitle: 'Physics Laboratory',
+    faculty: 'Dr. Williams',
+    roomName: 'Lab 301',
+    building: 'Engineering Building',
+    startTime: '14:00',
+    endTime: '17:00',
+    days: ['Monday', 'Wednesday'],
+    status: 'Active',
+    semester: '1st',
+    schoolYear: '2024-2025'
+  },
+  {
+    id: 4,
+    subjectCode: 'ENG101',
+    subjectTitle: 'English Composition',
+    faculty: 'Prof. Davis',
+    roomName: 'Room 102',
+    building: 'Main Building',
+    startTime: '08:00',
+    endTime: '09:30',
+    days: ['Monday', 'Wednesday', 'Friday'],
+    status: 'Active',
+    semester: '1st',
+    schoolYear: '2024-2025'
+  },
+  {
+    id: 5,
+    subjectCode: 'CHEM201',
+    subjectTitle: 'Organic Chemistry',
+    faculty: 'Dr. Brown',
+    roomName: 'Lab 201',
+    building: 'Science Building',
+    startTime: '13:00',
+    endTime: '15:00',
+    days: ['Tuesday', 'Thursday'],
+    status: 'Active',
+    semester: '1st',
+    schoolYear: '2024-2025'
+  }
+];
+
+// Initialize calendar when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the calendar system
+  window.calendar = new CalendarSystem({
+    container: document.getElementById('calendarContainer'),
+    view: 'week',
+    startHour: 7,
+    endHour: 19,
+    timeSlotDuration: 30,
+    showWeekends: false,
+    schedules: sampleSchedules,
+    onEventClick: function(schedule) {
+      showScheduleDetails(schedule);
+    }
+  });
+  
+  // Bind filter events
+  document.getElementById('buildingFilter').addEventListener('change', filterSchedules);
+  document.getElementById('facultyFilter').addEventListener('change', filterSchedules);
+  
+  // Load schedule form content
+  const scheduleModal = document.getElementById('scheduleModal');
+  if (scheduleModal) {
+    const contentSlot = scheduleModal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      contentSlot.innerHTML = `{{> forms/scheduleForm}}`;
+    }
+  }
+  
+  // Update statistics
+  updateStatistics();
+});
+
+function filterSchedules() {
+  const buildingFilter = document.getElementById('buildingFilter').value;
+  const facultyFilter = document.getElementById('facultyFilter').value;
+  
+  let filteredSchedules = [...sampleSchedules];
+  
+  if (buildingFilter !== 'all') {
+    filteredSchedules = filteredSchedules.filter(schedule => 
+      schedule.building.toLowerCase().includes(buildingFilter)
+    );
+  }
+  
+  if (facultyFilter !== 'all') {
+    filteredSchedules = filteredSchedules.filter(schedule => 
+      schedule.faculty.toLowerCase().includes(facultyFilter.replace('-', ' '))
+    );
+  }
+  
+  calendar.updateSchedules(filteredSchedules);
+  updateStatistics(filteredSchedules);
+}
+
+function showScheduleDetails(schedule) {
+  const modal = document.getElementById('scheduleDetailModal');
+  const contentSlot = modal.querySelector('.modal-content-slot');
+  
+  contentSlot.innerHTML = `
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-lg font-semibold text-brand">${schedule.subjectCode}</h3>
+        <p class="text-gray-600">${schedule.subjectTitle}</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Faculty:</span>
+            <span>${schedule.faculty}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Room:</span>
+            <span>${schedule.roomName}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Building:</span>
+            <span>${schedule.building}</span>
+          </div>
+        </div>
+        
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Time:</span>
+            <span>${schedule.startTime} - ${schedule.endTime}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Days:</span>
+            <span>${schedule.days.join(', ')}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Status:</span>
+            <span class="badge badge-green">${schedule.status}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex gap-2 pt-4 border-t">
+        <button onclick="editSchedule(${schedule.id})" class="btn btn-primary">Edit Schedule</button>
+        <button onclick="closeModal('scheduleDetailModal')" class="btn text-gray-600 border border-gray-300">Close</button>
+      </div>
+    </div>
+  `;
+  
+  openModal('scheduleDetailModal');
+}
+
+function editSchedule(scheduleId) {
+  closeModal('scheduleDetailModal');
+  openModal('scheduleModal');
+  
+  // Update modal title
+  const modalTitle = document.querySelector('#scheduleModal .modal-header h3');
+  if (modalTitle) {
+    modalTitle.textContent = 'Edit Schedule';
+  }
+}
+
+function exportCalendar() {
+  // Placeholder for export functionality
+  alert('Export functionality will be implemented next! Options will include PDF, Excel, and iCal formats.');
+}
+
+function updateStatistics(schedules = sampleSchedules) {
+  // Update today's classes count
+  const today = new Date();
+  const todayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+  const todayClasses = schedules.filter(schedule => schedule.days.includes(todayName));
+  document.getElementById('todayClassesCount').textContent = todayClasses.length;
+  
+  // Calculate room utilization (placeholder calculation)
+  const totalRooms = 10; // This would come from your room data
+  const occupiedRooms = schedules.length;
+  const utilization = Math.round((occupiedRooms / totalRooms) * 100);
+  document.getElementById('roomUtilization').textContent = utilization + '%';
+  
+  // Count active faculty
+  const uniqueFaculty = [...new Set(schedules.map(s => s.faculty))];
+  document.getElementById('activeFacultyCount').textContent = uniqueFaculty.length;
+  
+  // Conflicts (placeholder - would need proper conflict detection)
+  document.getElementById('conflictsCount').textContent = '0';
+}
+</script>
+{{/contentFor}}

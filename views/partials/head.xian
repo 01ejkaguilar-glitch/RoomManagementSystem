@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/app.css" />
   <script src="/js/modal-system.js"></script>
   <script src="/js/table-enhancements.js"></script>
+  <script src="/js/calendar-system.js"></script>
+  <script src="/js/conflict-detector.js"></script>
   <script>
     window.APP = { };
   </script>
