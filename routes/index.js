@@ -26,11 +26,18 @@
     
 import express from "express";
 import { homePage } from "../controllers/homeController.js";
+import { loginPage, registerPage, forgotPasswordPage, dashboardPage, loginUser, registerUser, logoutUser } from "../controllers/authController.js";
+import { collegesPage, collegeDetailPage, newCollegePage } from "../controllers/collegeController.js";
+import { buildingsPage, buildingDetailPage } from "../controllers/buildingController.js";
+import { roomsPage, roomDetailPage } from "../controllers/roomController.js";
+import { schedulesPage, scheduleDetailPage, newSchedulePage } from "../controllers/scheduleController.js";
+
 const router = express.Router();
+
+// Home routes
 router.get("/", homePage);
 
-import { loginPage, registerPage, forgotPasswordPage, dashboardPage, loginUser, registerUser, logoutUser } from "../controllers/authController.js";
-
+// Auth routes
 router.get("/login", loginPage);
 router.post("/login", loginUser);
 router.get("/register", registerPage);
@@ -38,5 +45,23 @@ router.post("/register", registerUser);
 router.get("/forgot-password", forgotPasswordPage);
 router.get("/dashboard", dashboardPage);
 router.get("/logout", logoutUser);
+
+// College routes
+router.get("/colleges", collegesPage);
+router.get("/colleges/new", newCollegePage);
+router.get("/colleges/:id", collegeDetailPage);
+
+// Building routes
+router.get("/buildings", buildingsPage);
+router.get("/buildings/:id", buildingDetailPage);
+
+// Room routes
+router.get("/rooms", roomsPage);
+router.get("/rooms/:id", roomDetailPage);
+
+// Schedule routes
+router.get("/schedules", schedulesPage);
+router.get("/schedules/new", newSchedulePage);
+router.get("/schedules/:id", scheduleDetailPage);
 
 export default router;

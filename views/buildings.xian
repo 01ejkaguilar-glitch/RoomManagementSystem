@@ -1,4 +1,82 @@
-{{#set 'breadcrumbs'}}
+<section>
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Buildings</h2>
+    <a href="/buildings/new" class="btn btn-primary">+ Add Building</a>
+  </div>
+  
+  {{#if buildingsByCollege}}
+  <div class="space-y-4">
+    {{#each buildingsByCollege}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <!-- College Header -->
+      <div class="bg-brand text-white px-6 py-4 cursor-pointer hover:bg-brand-accent transition" onclick="toggleAccordion('college-{{@index}}')">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold">{{@key}}</h3>
+          <div class="flex items-center gap-3">
+            <span class="text-sm opacity-90">{{this.length}} Building{{#unless (eq this.length 1)}}s{{/unless}}</span>
+            <svg class="w-5 h-5 transform transition-transform" id="icon-college-{{@index}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Buildings List -->
+      <div class="hidden" id="college-{{@index}}">
+        <div class="p-6 space-y-4">
+          {{#each this}}
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-semibold text-brand">{{this.name}}</h4>
+              <div class="flex items-center gap-2">
+                <span class="badge badge-green">{{this.roomCount}} Rooms</span>
+                <span class="text-xs text-gray-500">{{this.floors}} Floors</span>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between text-sm text-gray-600">
+              <span>Built in {{this.year_built}}</span>
+              <div class="flex gap-2">
+                <a href="/buildings/{{this.id}}" class="text-brand hover:text-brand-accent">View Details</a>
+                <span class="text-gray-300">|</span>
+                <button class="text-gray-500 hover:text-gray-700">Edit</button>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+    <div class="text-gray-400 mb-4">
+      <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No Buildings Found</h3>
+    <p class="text-gray-500 mb-4">Get started by adding your first building.</p>
+    <a href="/buildings/new" class="btn btn-primary">+ Add First Building</a>
+  </div>
+  {{/if}}
+</section>
+
+<script>
+function toggleAccordion(id) {
+  const content = document.getElementById(id);
+  const icon = document.getElementById('icon-' + id);
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    icon.style.transform = 'rotate(180deg)';
+  } else {
+    content.classList.add('hidden');
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
+</script>adcrumbs'}}
   [
     { "label": "Dashboard", "url": "/dashboard" },
     { "label": "Buildings", "url": "/buildings" }

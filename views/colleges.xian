@@ -1,11 +1,44 @@
-{{#set 'breadcrumbs'}}
-  [
-    { "label": "Dashboard", "url": "/dashboard" },
-    { "label": "Colleges", "url": "/colleges" }
-  ]
-{{/set}}
 <section>
-  <h2 class="text-2xl font-bold mb-6">Colleges</h2>
-  <!-- TODO: Grid of college cards -->
-  <div class="bg-white rounded-xl shadow-sm p-6 text-gray-500 text-center">College management UI coming soon.</div>
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Colleges</h2>
+    <a href="/colleges/new" class="btn btn-primary">+ Add College</a>
+  </div>
+  
+  {{#if colleges}}
+  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    {{#each colleges}}
+    <div class="card hover:shadow-md transition">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-brand">{{this.name}}</h3>
+          <p class="text-sm text-gray-500">{{this.abbreviation}}</p>
+        </div>
+        <span class="badge badge-green">{{this.buildingCount}} Buildings</span>
+      </div>
+      
+      <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{this.description}}</p>
+      
+      <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
+        <span>Established: {{this.established}}</span>
+      </div>
+      
+      <div class="flex gap-2">
+        <a href="/colleges/{{this.id}}" class="btn btn-primary flex-1 text-center">View Details</a>
+        <button class="btn text-gray-600 border border-gray-300 hover:bg-gray-50">Edit</button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+    <div class="text-gray-400 mb-4">
+      <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No Colleges Found</h3>
+    <p class="text-gray-500 mb-4">Get started by adding your first college.</p>
+    <a href="/colleges/new" class="btn btn-primary">+ Add First College</a>
+  </div>
+  {{/if}}
 </section>

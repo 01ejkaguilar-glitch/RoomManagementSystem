@@ -1,4 +1,144 @@
-{{#set 'breadcrumbs'}}
+<section>
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Rooms</h2>
+    <a href="/rooms/new" class="btn btn-primary">+ Add Room</a>
+  </div>
+  
+  <!-- Filters -->
+  <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+    <div class="flex flex-wrap items-center gap-4">
+      <div class="flex-1 min-w-64">
+        <input 
+          type="text" 
+          placeholder="Search rooms..." 
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40"
+          id="roomSearch"
+        />
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <label class="text-sm font-medium text-gray-700">Building:</label>
+        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40" id="buildingFilter">
+          <option value="">All Buildings</option>
+          {{#each buildings}}
+          <option value="{{this}}">{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <label class="text-sm font-medium text-gray-700">Availability:</label>
+        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40" id="availabilityFilter">
+          <option value="">All Rooms</option>
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Rooms Table -->
+  {{#if rooms}}
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Building</th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Capacity</th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Availability</th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200" id="roomsTableBody">
+          {{#each rooms}}
+          <tr class="hover:bg-gray-50 room-row" 
+              data-building="{{this.buildingName}}" 
+              data-availability="{{#if this.isAvailable}}available{{else}}occupied{{/if}}"
+              data-name="{{this.name}}">
+            <td class="px-6 py-4">
+              <div>
+                <div class="font-semibold text-gray-900">{{this.name}}</div>
+                <div class="text-xs text-gray-500">Floor {{this.floor}}</div>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{this.buildingName}}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{this.type}}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{this.capacity}} people</td>
+            <td class="px-6 py-4">
+              {{#if this.isAvailable}}
+                <span class="badge badge-green">Available</span>
+              {{else}}
+                <span class="badge badge-red">Occupied</span>
+              {{/if}}
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <a href="/rooms/{{this.id}}" class="text-brand hover:text-brand-accent text-sm">View</a>
+                <span class="text-gray-300">|</span>
+                <button class="text-gray-500 hover:text-gray-700 text-sm">Edit</button>
+                <span class="text-gray-300">|</span>
+                <button class="text-red-500 hover:text-red-700 text-sm">Delete</button>
+              </div>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {{else}}
+  <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+    <div class="text-gray-400 mb-4">
+      <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No Rooms Found</h3>
+    <p class="text-gray-500 mb-4">Get started by adding your first room.</p>
+    <a href="/rooms/new" class="btn btn-primary">+ Add First Room</a>
+  </div>
+  {{/if}}
+</section>
+
+<script>
+// Room filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('roomSearch');
+  const buildingFilter = document.getElementById('buildingFilter');
+  const availabilityFilter = document.getElementById('availabilityFilter');
+  const roomRows = document.querySelectorAll('.room-row');
+  
+  function filterRooms() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedBuilding = buildingFilter.value;
+    const selectedAvailability = availabilityFilter.value;
+    
+    roomRows.forEach(row => {
+      const roomName = row.dataset.name.toLowerCase();
+      const building = row.dataset.building;
+      const availability = row.dataset.availability;
+      
+      const matchesSearch = roomName.includes(searchTerm);
+      const matchesBuilding = !selectedBuilding || building === selectedBuilding;
+      const matchesAvailability = !selectedAvailability || availability === selectedAvailability;
+      
+      if (matchesSearch && matchesBuilding && matchesAvailability) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+  
+  searchInput.addEventListener('input', filterRooms);
+  buildingFilter.addEventListener('change', filterRooms);
+  availabilityFilter.addEventListener('change', filterRooms);
+});
+</script>adcrumbs'}}
   [
     { "label": "Dashboard", "url": "/dashboard" },
     { "label": "Rooms", "url": "/rooms" }

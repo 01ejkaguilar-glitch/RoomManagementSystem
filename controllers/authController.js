@@ -33,7 +33,47 @@ export const registerPage = (req, res) => res.render("register", { title: "Regis
 export const forgotPasswordPage = (req, res) => res.render("forgotpassword", { title: "Forgot Password" });
 export const dashboardPage = (req, res) => {
   if (!req.session.userId) return res.redirect("/login");
-  res.render("dashboard", { title: "Dashboard" });
+  
+  // Mock data for dashboard - replace with real database queries later
+  const stats = {
+    colleges: 8,
+    buildings: 25,
+    rooms: 120,
+    activeSchedules: 15
+  };
+  
+  const upcoming = [
+    {
+      subjectCode: "CS101",
+      subjectTitle: "Introduction to Computer Science",
+      roomName: "A101",
+      startTime: "08:00 AM",
+      endTime: "10:00 AM",
+      status: "Scheduled"
+    },
+    {
+      subjectCode: "MATH201",
+      subjectTitle: "Calculus II",
+      roomName: "B205",
+      startTime: "10:30 AM",
+      endTime: "12:00 PM",
+      status: "Scheduled"
+    },
+    {
+      subjectCode: "ENG102",
+      subjectTitle: "Technical Writing",
+      roomName: "C301",
+      startTime: "01:00 PM",
+      endTime: "02:30 PM",
+      status: "Scheduled"
+    }
+  ];
+  
+  res.render("dashboard", { 
+    title: "Dashboard",
+    stats: stats,
+    upcoming: upcoming
+  });
 };
 
 export const loginUser = async (req, res) => {
