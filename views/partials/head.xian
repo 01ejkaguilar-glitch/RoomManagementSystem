@@ -1,5 +1,6 @@
 <!DOCTYPE html>    <script src="/js/search-manager.js"></script>
     <script src="/js/notification-manager.js"></script>
+    <script src="/js/performance-monitor.js"></script>
   <script>
     window.APP = { };
   </script>ml lang="en" class="h-full">
