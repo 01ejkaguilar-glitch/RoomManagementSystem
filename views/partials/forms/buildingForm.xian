@@ -1,0 +1,229 @@
+<!-- Building Form Partial -->
+<form id="buildingForm" action="/buildings" method="POST" class="space-y-6">
+  <!-- Building Name Field -->
+  <div>
+    <label for="building_name" class="block text-sm font-medium text-gray-700 mb-2">
+      Building Name <span class="text-red-500">*</span>
+    </label>
+    <input 
+      type="text" 
+      id="building_name" 
+      name="name"
+      value="{{building.name}}"
+      placeholder="e.g., IT Main Building"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      required
+    />
+  </div>
+
+  <!-- College Selection -->
+  <div>
+    <label for="building_college" class="block text-sm font-medium text-gray-700 mb-2">
+      College <span class="text-red-500">*</span>
+    </label>
+    <select 
+      id="building_college" 
+      name="collegeId"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      required
+    >
+      <option value="">Select a college</option>
+      <option value="1" {{#if (eq building.collegeId 1)}}selected{{/if}}>College of Information Technology</option>
+      <option value="2" {{#if (eq building.collegeId 2)}}selected{{/if}}>College of Engineering</option>
+      <option value="3" {{#if (eq building.collegeId 3)}}selected{{/if}}>College of Business Administration</option>
+      <option value="4" {{#if (eq building.collegeId 4)}}selected{{/if}}>College of Arts and Sciences</option>
+    </select>
+  </div>
+
+  <!-- Building Details -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="building_floors" class="block text-sm font-medium text-gray-700 mb-2">
+        Number of Floors <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="number" 
+        id="building_floors" 
+        name="floors"
+        value="{{building.floors}}"
+        placeholder="e.g., 3"
+        min="1"
+        max="20"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+    
+    <div>
+      <label for="building_year_built" class="block text-sm font-medium text-gray-700 mb-2">
+        Year Built
+      </label>
+      <input 
+        type="number" 
+        id="building_year_built" 
+        name="year_built"
+        value="{{building.year_built}}"
+        placeholder="e.g., 2015"
+        min="1900"
+        max="2030"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+  </div>
+
+  <!-- Building Code -->
+  <div>
+    <label for="building_code" class="block text-sm font-medium text-gray-700 mb-2">
+      Building Code
+    </label>
+    <input 
+      type="text" 
+      id="building_code" 
+      name="code"
+      value="{{building.code}}"
+      placeholder="e.g., IT-01"
+      maxlength="10"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+    />
+    <p class="text-xs text-gray-500 mt-1">Unique identifier for the building</p>
+  </div>
+
+  <!-- Description -->
+  <div>
+    <label for="building_description" class="block text-sm font-medium text-gray-700 mb-2">
+      Description
+    </label>
+    <textarea 
+      id="building_description" 
+      name="description"
+      placeholder="Brief description of the building and its facilities..."
+      rows="3"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight resize-vertical"
+    >{{building.description}}</textarea>
+  </div>
+
+  <!-- Facilities -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-3">Facilities Available</label>
+    <div class="grid md:grid-cols-2 gap-3">
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="elevator" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Elevator</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="wifi" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">WiFi Coverage</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="parking" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Parking Area</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="cafeteria" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Cafeteria</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="library" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Library</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="facilities" value="accessible" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Wheelchair Accessible</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Contact Information -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="building_coordinator" class="block text-sm font-medium text-gray-700 mb-2">
+        Building Coordinator
+      </label>
+      <input 
+        type="text" 
+        id="building_coordinator" 
+        name="coordinator"
+        value="{{building.coordinator}}"
+        placeholder="e.g., John Smith"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+    
+    <div>
+      <label for="building_phone" class="block text-sm font-medium text-gray-700 mb-2">
+        Contact Phone
+      </label>
+      <input 
+        type="tel" 
+        id="building_phone" 
+        name="phone"
+        value="{{building.phone}}"
+        placeholder="e.g., (555) 123-4567"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+  </div>
+
+  <!-- Hidden field for edit mode -->
+  {{#if building.id}}
+  <input type="hidden" name="id" value="{{building.id}}">
+  {{/if}}
+
+  <!-- Submit Button -->
+  <div class="flex justify-end pt-4">
+    <button 
+      type="button" 
+      class="btn text-gray-600 border border-gray-300 hover:bg-gray-50 mr-3"
+      onclick="closeModal('buildingModal')"
+    >
+      Cancel
+    </button>
+    <button 
+      type="submit" 
+      class="btn btn-primary"
+    >
+      {{#if building.id}}Update Building{{else}}Add Building{{/if}}
+    </button>
+  </div>
+</form>
+
+<script>
+// Building form submission handling
+document.addEventListener('DOMContentLoaded', function() {
+  const buildingForm = document.getElementById('buildingForm');
+  if (buildingForm) {
+    buildingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Basic client-side validation
+      const name = document.getElementById('building_name').value.trim();
+      const college = document.getElementById('building_college').value;
+      const floors = document.getElementById('building_floors').value;
+      
+      if (!name) {
+        alert('Building name is required');
+        return;
+      }
+      
+      if (!college) {
+        alert('Please select a college');
+        return;
+      }
+      
+      if (!floors || floors < 1) {
+        alert('Please enter a valid number of floors');
+        return;
+      }
+      
+      // For now, just simulate success and close modal
+      alert('Building saved successfully!');
+      closeModal('buildingModal');
+      
+      // Refresh the page to show updated data
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
+  }
+});
+</script>

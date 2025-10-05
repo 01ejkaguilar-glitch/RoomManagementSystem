@@ -1,0 +1,368 @@
+<!-- Schedule Form Partial -->
+<form id="scheduleForm" action="/schedules" method="POST" class="space-y-6">
+  <!-- Subject Information -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="schedule_subject_code" class="block text-sm font-medium text-gray-700 mb-2">
+        Subject Code <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="text" 
+        id="schedule_subject_code" 
+        name="subjectCode"
+        value="{{schedule.subjectCode}}"
+        placeholder="e.g., CS101"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+    
+    <div>
+      <label for="schedule_subject_title" class="block text-sm font-medium text-gray-700 mb-2">
+        Subject Title <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="text" 
+        id="schedule_subject_title" 
+        name="subjectTitle"
+        value="{{schedule.subjectTitle}}"
+        placeholder="e.g., Introduction to Computer Science"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+  </div>
+
+  <!-- Faculty Information -->
+  <div>
+    <label for="schedule_faculty" class="block text-sm font-medium text-gray-700 mb-2">
+      Faculty/Instructor <span class="text-red-500">*</span>
+    </label>
+    <select 
+      id="schedule_faculty" 
+      name="faculty"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      required
+    >
+      <option value="">Select faculty member</option>
+      <option value="Dr. Maria Santos" {{#if (eq schedule.faculty "Dr. Maria Santos")}}selected{{/if}}>Dr. Maria Santos</option>
+      <option value="Prof. Juan Dela Cruz" {{#if (eq schedule.faculty "Prof. Juan Dela Cruz")}}selected{{/if}}>Prof. Juan Dela Cruz</option>
+      <option value="Ms. Ana Garcia" {{#if (eq schedule.faculty "Ms. Ana Garcia")}}selected{{/if}}>Ms. Ana Garcia</option>
+      <option value="Dr. Roberto Kim" {{#if (eq schedule.faculty "Dr. Roberto Kim")}}selected{{/if}}>Dr. Roberto Kim</option>
+      <option value="Prof. Lisa Chen" {{#if (eq schedule.faculty "Prof. Lisa Chen")}}selected{{/if}}>Prof. Lisa Chen</option>
+    </select>
+  </div>
+
+  <!-- Room Selection -->
+  <div>
+    <label for="schedule_room" class="block text-sm font-medium text-gray-700 mb-2">
+      Room <span class="text-red-500">*</span>
+    </label>
+    <select 
+      id="schedule_room" 
+      name="roomId"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      required
+    >
+      <option value="">Select a room</option>
+      <optgroup label="IT Main Building">
+        <option value="1" {{#if (eq schedule.roomId 1)}}selected{{/if}}>A101 - Lecture Hall (40 capacity)</option>
+        <option value="2" {{#if (eq schedule.roomId 2)}}selected{{/if}}>A102 - Classroom (35 capacity)</option>
+      </optgroup>
+      <optgroup label="IT Laboratory Building">
+        <option value="3" {{#if (eq schedule.roomId 3)}}selected{{/if}}>B201 - Computer Lab (25 capacity)</option>
+      </optgroup>
+      <optgroup label="Engineering Complex A">
+        <option value="4" {{#if (eq schedule.roomId 4)}}selected{{/if}}>C301 - Laboratory (50 capacity)</option>
+      </optgroup>
+      <optgroup label="Business Administration Building">
+        <option value="5" {{#if (eq schedule.roomId 5)}}selected{{/if}}>D205 - Conference Room (30 capacity)</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <!-- Time Information -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="schedule_start_time" class="block text-sm font-medium text-gray-700 mb-2">
+        Start Time <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="time" 
+        id="schedule_start_time" 
+        name="startTime"
+        value="{{schedule.startTime}}"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+    
+    <div>
+      <label for="schedule_end_time" class="block text-sm font-medium text-gray-700 mb-2">
+        End Time <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="time" 
+        id="schedule_end_time" 
+        name="endTime"
+        value="{{schedule.endTime}}"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+  </div>
+
+  <!-- Days of Week -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-3">Days of Week <span class="text-red-500">*</span></label>
+    <div class="grid grid-cols-7 gap-2">
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Monday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Mon</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Tuesday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Tue</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Wednesday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Wed</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Thursday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Thu</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Friday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Fri</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Saturday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Sat</span>
+      </label>
+      <label class="flex flex-col items-center">
+        <input type="checkbox" name="days" value="Sunday" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="text-xs text-gray-700 mt-1">Sun</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Academic Information -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="schedule_semester" class="block text-sm font-medium text-gray-700 mb-2">
+        Semester <span class="text-red-500">*</span>
+      </label>
+      <select 
+        id="schedule_semester" 
+        name="semester"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      >
+        <option value="">Select semester</option>
+        <option value="1st Semester" {{#if (eq schedule.semester "1st Semester")}}selected{{/if}}>1st Semester</option>
+        <option value="2nd Semester" {{#if (eq schedule.semester "2nd Semester")}}selected{{/if}}>2nd Semester</option>
+        <option value="Summer" {{#if (eq schedule.semester "Summer")}}selected{{/if}}>Summer</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="schedule_school_year" class="block text-sm font-medium text-gray-700 mb-2">
+        School Year <span class="text-red-500">*</span>
+      </label>
+      <select 
+        id="schedule_school_year" 
+        name="schoolYear"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      >
+        <option value="">Select school year</option>
+        <option value="2024-2025" {{#if (eq schedule.schoolYear "2024-2025")}}selected{{/if}}>2024-2025</option>
+        <option value="2025-2026" {{#if (eq schedule.schoolYear "2025-2026")}}selected{{/if}}>2025-2026</option>
+        <option value="2026-2027" {{#if (eq schedule.schoolYear "2026-2027")}}selected{{/if}}>2026-2027</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Section and Units -->
+  <div class="grid md:grid-cols-3 gap-4">
+    <div>
+      <label for="schedule_section" class="block text-sm font-medium text-gray-700 mb-2">
+        Section
+      </label>
+      <input 
+        type="text" 
+        id="schedule_section" 
+        name="section"
+        value="{{schedule.section}}"
+        placeholder="e.g., IT-1A"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+    
+    <div>
+      <label for="schedule_units" class="block text-sm font-medium text-gray-700 mb-2">
+        Units
+      </label>
+      <input 
+        type="number" 
+        id="schedule_units" 
+        name="units"
+        value="{{schedule.units}}"
+        placeholder="e.g., 3"
+        min="1"
+        max="6"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+    
+    <div>
+      <label for="schedule_max_students" class="block text-sm font-medium text-gray-700 mb-2">
+        Max Students
+      </label>
+      <input 
+        type="number" 
+        id="schedule_max_students" 
+        name="maxStudents"
+        value="{{schedule.maxStudents}}"
+        placeholder="e.g., 35"
+        min="1"
+        max="100"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div>
+    <label for="schedule_notes" class="block text-sm font-medium text-gray-700 mb-2">
+      Notes
+    </label>
+    <textarea 
+      id="schedule_notes" 
+      name="notes"
+      placeholder="Additional notes or requirements for this schedule..."
+      rows="3"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight resize-vertical"
+    >{{schedule.notes}}</textarea>
+  </div>
+
+  <!-- Schedule Status -->
+  <div>
+    <label for="schedule_status" class="block text-sm font-medium text-gray-700 mb-2">
+      Status
+    </label>
+    <select 
+      id="schedule_status" 
+      name="status"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+    >
+      <option value="Active" {{#if (eq schedule.status "Active")}}selected{{/if}}>Active</option>
+      <option value="Pending" {{#if (eq schedule.status "Pending")}}selected{{/if}}>Pending</option>
+      <option value="Cancelled" {{#if (eq schedule.status "Cancelled")}}selected{{/if}}>Cancelled</option>
+      <option value="Completed" {{#if (eq schedule.status "Completed")}}selected{{/if}}>Completed</option>
+    </select>
+  </div>
+
+  <!-- Hidden field for edit mode -->
+  {{#if schedule.id}}
+  <input type="hidden" name="id" value="{{schedule.id}}">
+  {{/if}}
+
+  <!-- Submit Button -->
+  <div class="flex justify-end pt-4">
+    <button 
+      type="button" 
+      class="btn text-gray-600 border border-gray-300 hover:bg-gray-50 mr-3"
+      onclick="closeModal('scheduleModal')"
+    >
+      Cancel
+    </button>
+    <button 
+      type="submit" 
+      class="btn btn-primary"
+    >
+      {{#if schedule.id}}Update Schedule{{else}}Add Schedule{{/if}}
+    </button>
+  </div>
+</form>
+
+<script>
+// Schedule form submission handling
+document.addEventListener('DOMContentLoaded', function() {
+  const scheduleForm = document.getElementById('scheduleForm');
+  if (scheduleForm) {
+    scheduleForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Basic client-side validation
+      const subjectCode = document.getElementById('schedule_subject_code').value.trim();
+      const subjectTitle = document.getElementById('schedule_subject_title').value.trim();
+      const faculty = document.getElementById('schedule_faculty').value;
+      const room = document.getElementById('schedule_room').value;
+      const startTime = document.getElementById('schedule_start_time').value;
+      const endTime = document.getElementById('schedule_end_time').value;
+      const semester = document.getElementById('schedule_semester').value;
+      const schoolYear = document.getElementById('schedule_school_year').value;
+      
+      // Check required fields
+      if (!subjectCode) {
+        alert('Subject code is required');
+        return;
+      }
+      
+      if (!subjectTitle) {
+        alert('Subject title is required');
+        return;
+      }
+      
+      if (!faculty) {
+        alert('Please select a faculty member');
+        return;
+      }
+      
+      if (!room) {
+        alert('Please select a room');
+        return;
+      }
+      
+      if (!startTime || !endTime) {
+        alert('Please enter start and end times');
+        return;
+      }
+      
+      if (!semester) {
+        alert('Please select a semester');
+        return;
+      }
+      
+      if (!schoolYear) {
+        alert('Please select a school year');
+        return;
+      }
+      
+      // Check if at least one day is selected
+      const selectedDays = document.querySelectorAll('input[name="days"]:checked');
+      if (selectedDays.length === 0) {
+        alert('Please select at least one day of the week');
+        return;
+      }
+      
+      // Validate time range
+      if (startTime >= endTime) {
+        alert('End time must be after start time');
+        return;
+      }
+      
+      // For now, just simulate success and close modal
+      alert('Schedule saved successfully!');
+      closeModal('scheduleModal');
+      
+      // Refresh the page to show updated data
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
+  }
+});
+</script>

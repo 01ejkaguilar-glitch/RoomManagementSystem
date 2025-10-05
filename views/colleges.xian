@@ -1,7 +1,7 @@
 <section>
   <div class="flex items-center justify-between mb-6">
     <h2 class="text-2xl font-bold">Colleges</h2>
-    <a href="/colleges/new" class="btn btn-primary">+ Add College</a>
+    <button onclick="openModal('collegeModal')" class="btn btn-primary">+ Add College</button>
   </div>
   
   {{#if colleges}}
@@ -24,7 +24,7 @@
       
       <div class="flex gap-2">
         <a href="/colleges/{{this.id}}" class="btn btn-primary flex-1 text-center">View Details</a>
-        <button class="btn text-gray-600 border border-gray-300 hover:bg-gray-50">Edit</button>
+        <button onclick="editCollege({{this.id}})" class="btn text-gray-600 border border-gray-300 hover:bg-gray-50">Edit</button>
       </div>
     </div>
     {{/each}}
@@ -38,7 +38,49 @@
     </div>
     <h3 class="text-lg font-medium text-gray-900 mb-2">No Colleges Found</h3>
     <p class="text-gray-500 mb-4">Get started by adding your first college.</p>
-    <a href="/colleges/new" class="btn btn-primary">+ Add First College</a>
+    <button onclick="openModal('collegeModal')" class="btn btn-primary">+ Add First College</button>
   </div>
   {{/if}}
 </section>
+
+<!-- College Modal -->
+{{> modal modalId="collegeModal" title="Add New College" subtitle="Enter the college information below" width="lg" showFooter=false}}
+
+<script>
+// Replace modal content with college form
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('collegeModal');
+  if (modal) {
+    const contentSlot = modal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      // Load college form
+      fetch('/partials/forms/collegeForm')
+        .then(response => response.text())
+        .then(html => {
+          contentSlot.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error loading college form:', error);
+          contentSlot.innerHTML = `
+            <div class="text-center py-8">
+              <p class="text-gray-500">Error loading form. Please refresh the page.</p>
+            </div>
+          `;
+        });
+    }
+  }
+});
+
+// Edit college function
+function editCollege(collegeId) {
+  // For now, just open the modal
+  // In a real app, this would fetch college data and populate the form
+  openModal('collegeModal');
+  
+  // Update modal title
+  const modalTitle = document.querySelector('#collegeModal .modal-header h3');
+  if (modalTitle) {
+    modalTitle.textContent = 'Edit College';
+  }
+}
+</script>

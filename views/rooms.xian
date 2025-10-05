@@ -1,7 +1,7 @@
 <section>
   <div class="flex items-center justify-between mb-6">
     <h2 class="text-2xl font-bold">Rooms</h2>
-    <a href="/rooms/new" class="btn btn-primary">+ Add Room</a>
+    <button onclick="openModal('roomModal')" class="btn btn-primary">+ Add Room</button>
   </div>
   
   <!-- Filters -->
@@ -78,9 +78,9 @@
               <div class="flex items-center gap-2">
                 <a href="/rooms/{{this.id}}" class="text-brand hover:text-brand-accent text-sm">View</a>
                 <span class="text-gray-300">|</span>
-                <button class="text-gray-500 hover:text-gray-700 text-sm">Edit</button>
+                <button onclick="editRoom({{this.id}})" class="text-gray-500 hover:text-gray-700 text-sm">Edit</button>
                 <span class="text-gray-300">|</span>
-                <button class="text-red-500 hover:text-red-700 text-sm">Delete</button>
+                <button onclick="deleteRoom({{this.id}})" class="text-red-500 hover:text-red-700 text-sm">Delete</button>
               </div>
             </td>
           </tr>
@@ -99,10 +99,16 @@
     </div>
     <h3 class="text-lg font-medium text-gray-900 mb-2">No Rooms Found</h3>
     <p class="text-gray-500 mb-4">Get started by adding your first room.</p>
-    <a href="/rooms/new" class="btn btn-primary">+ Add First Room</a>
+    <button onclick="openModal('roomModal')" class="btn btn-primary">+ Add First Room</button>
   </div>
   {{/if}}
 </section>
+
+<!-- Room Modal -->
+{{> modal modalId="roomModal" title="Add New Room" subtitle="Enter the room information below" width="lg" showFooter=false}}
+
+<!-- Delete Confirmation Modal -->
+{{> modal modalId="deleteRoomModal" title="Delete Room" subtitle="Are you sure you want to delete this room?" width="md" showFooter=true submitText="Delete" }}
 
 <script>
 // Room filtering functionality
@@ -137,6 +143,70 @@ document.addEventListener('DOMContentLoaded', function() {
   searchInput.addEventListener('input', filterRooms);
   buildingFilter.addEventListener('change', filterRooms);
   availabilityFilter.addEventListener('change', filterRooms);
+  
+  // Load room form content
+  const roomModal = document.getElementById('roomModal');
+  if (roomModal) {
+    const contentSlot = roomModal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      contentSlot.innerHTML = `{{> forms/roomForm}}`;
+    }
+  }
+  
+  // Setup delete modal
+  const deleteModal = document.getElementById('deleteRoomModal');
+  if (deleteModal) {
+    const contentSlot = deleteModal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      contentSlot.innerHTML = `
+        <div class="text-center py-4">
+          <div class="text-red-400 mb-4">
+            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <p class="text-gray-600">This action cannot be undone. The room and all associated schedules will be permanently deleted.</p>
+        </div>
+      `;
+    }
+  }
+});
+
+// Edit room function
+function editRoom(roomId) {
+  openModal('roomModal');
+  
+  // Update modal title
+  const modalTitle = document.querySelector('#roomModal .modal-header h3');
+  if (modalTitle) {
+    modalTitle.textContent = 'Edit Room';
+  }
+}
+
+// Delete room function
+let roomToDelete = null;
+
+function deleteRoom(roomId) {
+  roomToDelete = roomId;
+  openModal('deleteRoomModal');
+}
+
+// Handle delete confirmation
+document.addEventListener('DOMContentLoaded', function() {
+  const deleteForm = document.querySelector('#deleteRoomModal form');
+  if (deleteForm) {
+    deleteForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (roomToDelete) {
+        alert(`Room ${roomToDelete} deleted successfully!`);
+        closeModal('deleteRoomModal');
+        // Refresh page to show updated data
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }
+    });
+  }
 });
 </script>adcrumbs'}}
   [

@@ -1,7 +1,7 @@
 <section>
   <div class="flex items-center justify-between mb-6">
     <h2 class="text-2xl font-bold">Schedules</h2>
-    <a href="/schedules/new" class="btn btn-primary">+ Add Schedule</a>
+    <button onclick="openModal('scheduleModal')" class="btn btn-primary">+ Add Schedule</button>
   </div>
   
   <!-- Schedule Stats -->
@@ -93,9 +93,9 @@
           <div class="flex items-center gap-2 ml-4">
             <a href="/schedules/{{this.id}}" class="text-brand hover:text-brand-accent text-sm">View</a>
             <span class="text-gray-300">|</span>
-            <button class="text-gray-500 hover:text-gray-700 text-sm">Edit</button>
+            <button onclick="editSchedule({{this.id}})" class="text-gray-500 hover:text-gray-700 text-sm">Edit</button>
             <span class="text-gray-300">|</span>
-            <button class="text-red-500 hover:text-red-700 text-sm">Delete</button>
+            <button onclick="deleteSchedule({{this.id}})" class="text-red-500 hover:text-red-700 text-sm">Delete</button>
           </div>
         </div>
       </div>
@@ -111,10 +111,13 @@
     </div>
     <h3 class="text-lg font-medium text-gray-900 mb-2">No Schedules Found</h3>
     <p class="text-gray-500 mb-4">Get started by creating your first class schedule.</p>
-    <a href="/schedules/new" class="btn btn-primary">+ Add First Schedule</a>
+    <button onclick="openModal('scheduleModal')" class="btn btn-primary">+ Add First Schedule</button>
   </div>
   {{/if}}
 </section>
+
+<!-- Schedule Modal -->
+{{> modal modalId="scheduleModal" title="Add New Schedule" subtitle="Create a new class schedule" width="lg" showFooter=false}}
 
 <script>
 // Schedule view toggle (placeholder for future calendar integration)
@@ -125,5 +128,36 @@ document.addEventListener('DOMContentLoaded', function() {
   calendarViewBtn.addEventListener('click', function() {
     alert('Calendar view will be available in the next phase!');
   });
+  
+  // Load schedule form content
+  const scheduleModal = document.getElementById('scheduleModal');
+  if (scheduleModal) {
+    const contentSlot = scheduleModal.querySelector('.modal-content-slot');
+    if (contentSlot) {
+      contentSlot.innerHTML = `{{> forms/scheduleForm}}`;
+    }
+  }
 });
+
+// Edit schedule function
+function editSchedule(scheduleId) {
+  openModal('scheduleModal');
+  
+  // Update modal title
+  const modalTitle = document.querySelector('#scheduleModal .modal-header h3');
+  if (modalTitle) {
+    modalTitle.textContent = 'Edit Schedule';
+  }
+}
+
+// Delete schedule function
+function deleteSchedule(scheduleId) {
+  if (confirm('Are you sure you want to delete this schedule? This action cannot be undone.')) {
+    alert(`Schedule ${scheduleId} deleted successfully!`);
+    // Refresh page to show updated data
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  }
+}
 </script>

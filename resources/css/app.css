@@ -18,6 +18,13 @@
   /* Avoid !important inside @apply; override via higher specificity */
   .sidebar-link-active { @apply bg-highlight text-gray-900 hover:bg-highlight/90; }
   .breadcrumb { @apply text-sm text-gray-600; }
+  
+  /* Table Enhancement Styles */
+  .sortable-header { @apply cursor-pointer hover:bg-gray-50 select-none; }
+  .sortable-header:hover { @apply text-brand; }
+  .sortable-header.sort-asc .sort-icon::after { content: ' ▲'; color: #3b82f6; }
+  .sortable-header.sort-desc .sort-icon::after { content: ' ▼'; color: #3b82f6; }
+  .sort-icon { @apply inline-block text-gray-400 transition-colors; }
 }
 
 /* Utilities */

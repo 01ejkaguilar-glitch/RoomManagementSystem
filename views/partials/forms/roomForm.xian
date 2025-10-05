@@ -1,0 +1,282 @@
+<!-- Room Form Partial -->
+<form id="roomForm" action="/rooms" method="POST" class="space-y-6">
+  <!-- Room Name and Building -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="room_name" class="block text-sm font-medium text-gray-700 mb-2">
+        Room Name/Number <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="text" 
+        id="room_name" 
+        name="name"
+        value="{{room.name}}"
+        placeholder="e.g., A101 or Lab 1"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+    
+    <div>
+      <label for="room_building" class="block text-sm font-medium text-gray-700 mb-2">
+        Building <span class="text-red-500">*</span>
+      </label>
+      <select 
+        id="room_building" 
+        name="buildingId"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      >
+        <option value="">Select a building</option>
+        <option value="1" {{#if (eq room.buildingId 1)}}selected{{/if}}>IT Main Building</option>
+        <option value="2" {{#if (eq room.buildingId 2)}}selected{{/if}}>IT Laboratory Building</option>
+        <option value="3" {{#if (eq room.buildingId 3)}}selected{{/if}}>Engineering Complex A</option>
+        <option value="4" {{#if (eq room.buildingId 4)}}selected{{/if}}>Engineering Complex B</option>
+        <option value="5" {{#if (eq room.buildingId 5)}}selected{{/if}}>Business Administration Building</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Room Type and Capacity -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="room_type" class="block text-sm font-medium text-gray-700 mb-2">
+        Room Type <span class="text-red-500">*</span>
+      </label>
+      <select 
+        id="room_type" 
+        name="type"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      >
+        <option value="">Select room type</option>
+        <option value="Classroom" {{#if (eq room.type "Classroom")}}selected{{/if}}>Classroom</option>
+        <option value="Lecture Hall" {{#if (eq room.type "Lecture Hall")}}selected{{/if}}>Lecture Hall</option>
+        <option value="Computer Lab" {{#if (eq room.type "Computer Lab")}}selected{{/if}}>Computer Lab</option>
+        <option value="Laboratory" {{#if (eq room.type "Laboratory")}}selected{{/if}}>Laboratory</option>
+        <option value="Conference Room" {{#if (eq room.type "Conference Room")}}selected{{/if}}>Conference Room</option>
+        <option value="Auditorium" {{#if (eq room.type "Auditorium")}}selected{{/if}}>Auditorium</option>
+        <option value="Library" {{#if (eq room.type "Library")}}selected{{/if}}>Library</option>
+        <option value="Office" {{#if (eq room.type "Office")}}selected{{/if}}>Office</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="room_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+        Capacity <span class="text-red-500">*</span>
+      </label>
+      <input 
+        type="number" 
+        id="room_capacity" 
+        name="capacity"
+        value="{{room.capacity}}"
+        placeholder="e.g., 40"
+        min="1"
+        max="500"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      />
+    </div>
+  </div>
+
+  <!-- Floor and Room Code -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label for="room_floor" class="block text-sm font-medium text-gray-700 mb-2">
+        Floor <span class="text-red-500">*</span>
+      </label>
+      <select 
+        id="room_floor" 
+        name="floor"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+        required
+      >
+        <option value="">Select floor</option>
+        <option value="1" {{#if (eq room.floor 1)}}selected{{/if}}>Ground Floor (1st)</option>
+        <option value="2" {{#if (eq room.floor 2)}}selected{{/if}}>2nd Floor</option>
+        <option value="3" {{#if (eq room.floor 3)}}selected{{/if}}>3rd Floor</option>
+        <option value="4" {{#if (eq room.floor 4)}}selected{{/if}}>4th Floor</option>
+        <option value="5" {{#if (eq room.floor 5)}}selected{{/if}}>5th Floor</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="room_code" class="block text-sm font-medium text-gray-700 mb-2">
+        Room Code
+      </label>
+      <input 
+        type="text" 
+        id="room_code" 
+        name="code"
+        value="{{room.code}}"
+        placeholder="e.g., IT-A101"
+        maxlength="15"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+      />
+      <p class="text-xs text-gray-500 mt-1">Unique identifier for the room</p>
+    </div>
+  </div>
+
+  <!-- Equipment and Features -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-3">Equipment & Features</label>
+    <div class="grid md:grid-cols-3 gap-3">
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="projector" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Projector</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="whiteboard" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Whiteboard</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="ac" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Air Conditioning</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="computers" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Computers</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="sound_system" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Sound System</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="microphone" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Microphone</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="smart_tv" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Smart TV</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="lab_equipment" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Lab Equipment</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="equipment" value="wifi" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">WiFi Access</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Accessibility -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-3">Accessibility Features</label>
+    <div class="grid md:grid-cols-2 gap-3">
+      <label class="flex items-center">
+        <input type="checkbox" name="accessibility" value="wheelchair_accessible" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Wheelchair Accessible</span>
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" name="accessibility" value="hearing_loop" class="rounded border-gray-300 text-brand focus:ring-highlight">
+        <span class="ml-2 text-sm text-gray-700">Hearing Loop System</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div>
+    <label for="room_description" class="block text-sm font-medium text-gray-700 mb-2">
+      Description
+    </label>
+    <textarea 
+      id="room_description" 
+      name="description"
+      placeholder="Additional notes about the room..."
+      rows="3"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight resize-vertical"
+    >{{room.description}}</textarea>
+  </div>
+
+  <!-- Room Status -->
+  <div>
+    <label for="room_status" class="block text-sm font-medium text-gray-700 mb-2">
+      Status
+    </label>
+    <select 
+      id="room_status" 
+      name="status"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-highlight/40 focus:border-highlight"
+    >
+      <option value="active" {{#if (eq room.status "active")}}selected{{/if}}>Active</option>
+      <option value="maintenance" {{#if (eq room.status "maintenance")}}selected{{/if}}>Under Maintenance</option>
+      <option value="inactive" {{#if (eq room.status "inactive")}}selected{{/if}}>Inactive</option>
+    </select>
+  </div>
+
+  <!-- Hidden field for edit mode -->
+  {{#if room.id}}
+  <input type="hidden" name="id" value="{{room.id}}">
+  {{/if}}
+
+  <!-- Submit Button -->
+  <div class="flex justify-end pt-4">
+    <button 
+      type="button" 
+      class="btn text-gray-600 border border-gray-300 hover:bg-gray-50 mr-3"
+      onclick="closeModal('roomModal')"
+    >
+      Cancel
+    </button>
+    <button 
+      type="submit" 
+      class="btn btn-primary"
+    >
+      {{#if room.id}}Update Room{{else}}Add Room{{/if}}
+    </button>
+  </div>
+</form>
+
+<script>
+// Room form submission handling
+document.addEventListener('DOMContentLoaded', function() {
+  const roomForm = document.getElementById('roomForm');
+  if (roomForm) {
+    roomForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Basic client-side validation
+      const name = document.getElementById('room_name').value.trim();
+      const building = document.getElementById('room_building').value;
+      const type = document.getElementById('room_type').value;
+      const capacity = document.getElementById('room_capacity').value;
+      const floor = document.getElementById('room_floor').value;
+      
+      if (!name) {
+        alert('Room name is required');
+        return;
+      }
+      
+      if (!building) {
+        alert('Please select a building');
+        return;
+      }
+      
+      if (!type) {
+        alert('Please select a room type');
+        return;
+      }
+      
+      if (!capacity || capacity < 1) {
+        alert('Please enter a valid capacity');
+        return;
+      }
+      
+      if (!floor) {
+        alert('Please select a floor');
+        return;
+      }
+      
+      // For now, just simulate success and close modal
+      alert('Room saved successfully!');
+      closeModal('roomModal');
+      
+      // Refresh the page to show updated data
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
+  }
+});
+</script>
