@@ -1,0 +1,25 @@
+<header class="h-14 flex items-center justify-between border-b bg-white px-6">
+  <div class="flex items-center gap-3">
+    <h1 class="text-lg font-semibold tracking-wide">{{ pageTitle }}</h1>
+    {{#if breadcrumbs}}
+      <nav aria-label="Breadcrumb" class="ml-4 flex items-center gap-2 text-xs text-gray-500">
+        {{#each breadcrumbs}}
+          <a href="{{this.url}}" class="hover:text-gray-700">{{this.label}}</a>
+          {{#unless @last}}<span>/</span>{{/unless}}
+        {{/each}}
+      </nav>
+    {{/if}}
+  </div>
+  <div class="flex items-center gap-4">
+    <form action="/search" method="GET" class="hidden md:block">
+      <input name="q" placeholder="Search rooms/schedules" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-highlight/40" />
+    </form>
+    <div class="relative group">
+      <button class="flex items-center gap-2 text-sm font-medium">User ▾</button>
+      <div class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition p-2 text-sm">
+        <a class="block px-2 py-1 rounded hover:bg-gray-100" href="/settings">Account</a>
+        <a class="block px-2 py-1 rounded hover:bg-gray-100" href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</header>

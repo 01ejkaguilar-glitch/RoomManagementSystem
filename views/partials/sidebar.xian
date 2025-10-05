@@ -1,10 +1,15 @@
-{{> head}}
-<body class="bg-gray-50">
-  <div class="text-center mt-20">
-    <h2 class="text-2xl">Dashboard</h2>
-    <p class="mt-4">Welcome to your dashboard!</p>
-    <div class="mt-6">
-      <a href="/logout" class="text-red-600 font-medium">Logout</a>
-    </div>
+<aside class="w-64 bg-brand text-white flex flex-col min-h-screen sticky top-0">
+  <div class="px-4 py-5 text-lg font-semibold tracking-wide flex items-center gap-2">
+    <span class="text-highlight">MinSU</span> RMS
   </div>
-<%- include('partials/footer') %>
+  <nav class="flex-1 overflow-y-auto space-y-1 px-2">
+    <a href="/dashboard" class="sidebar-link {{#if (eq activeRoute 'dashboard')}}sidebar-link-active{{/if}}">Dashboard</a>
+    <a href="/colleges" class="sidebar-link {{#if (eq activeRoute 'colleges')}}sidebar-link-active{{/if}}">Colleges</a>
+    <a href="/buildings" class="sidebar-link {{#if (eq activeRoute 'buildings')}}sidebar-link-active{{/if}}">Buildings</a>
+    <a href="/rooms" class="sidebar-link {{#if (eq activeRoute 'rooms')}}sidebar-link-active{{/if}}">Rooms</a>
+    <a href="/schedules" class="sidebar-link {{#if (eq activeRoute 'schedules')}}sidebar-link-active{{/if}}">Schedules</a>
+  </nav>
+  <div class="p-4 text-xs text-white/60">
+    &copy; {{year}} MinSU RMS
+  </div>
+</aside>

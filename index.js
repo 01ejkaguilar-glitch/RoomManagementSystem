@@ -50,20 +50,23 @@ app.use(session({
 }));
 app.use(flash());
 
+// Register small helpers
+hbs.registerHelper('eq', (a,b) => a === b);
+
+// Layout-aware engine: always wraps page content with base layout
 app.engine("xian", async (filePath, options, callback) => {
   try {
-     const originalPartialsDir = hbs.partialsDir;
-    hbs.partialsDir = path.join(__dirname, 'views');
+    const viewsRoot = path.join(__dirname, 'views');
+    const layoutPath = path.join(viewsRoot, 'layouts', 'base.xian');
 
-    const result = await new Promise((resolve, reject) => {
-      hbs.__express(filePath, options, (err, html) => {
-        if (err) return reject(err);
-        resolve(html);
-      });
+    const pageHtml = await new Promise((resolve, reject) => {
+      hbs.__express(filePath, options, (err, html) => err ? reject(err) : resolve(html));
     });
 
-    hbs.partialsDir = originalPartialsDir;
-    callback(null, result);
+    const layoutHtml = await fs.promises.readFile(layoutPath, 'utf8');
+    // Inject rendered body marker
+    const finalHtml = layoutHtml.replace('{{{ body }}}', pageHtml);
+    callback(null, finalHtml);
   } catch (err) {
     callback(err);
   }
@@ -71,6 +74,9 @@ app.engine("xian", async (filePath, options, callback) => {
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+  res.locals.activeRoute = req.path.split('/')[1] || 'dashboard';
+  res.locals.year = new Date().getFullYear();
+  res.locals.breadcrumbs = res.locals.breadcrumbs || [];
   next();
 });
 

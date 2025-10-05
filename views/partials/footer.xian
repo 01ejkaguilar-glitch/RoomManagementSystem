@@ -1,5 +1,3 @@
-<footer class="mt-8 py-4 text-center text-gray-500 text-sm">
-  &copy; 2025 XianFire Framework — Built with ❤️ at Mindoro State University
+<footer class="mt-8 py-6 text-center text-xs text-gray-400">
+  &copy; 2025 MinSU Room Management System. All rights reserved.
 </footer>
-</body>
-</html>

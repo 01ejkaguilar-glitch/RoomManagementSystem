@@ -1,0 +1,26 @@
+/*
+  The following directives require Tailwind CSS and PostCSS processing.
+  Make sure your build toolchain is set up to process Tailwind directives.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component layer */
+@layer components {
+  .btn { @apply inline-flex items-center justify-center font-medium rounded-xl px-4 py-2 transition focus:outline-none focus:ring-2 focus:ring-highlight/50 disabled:opacity-60 disabled:cursor-not-allowed; }
+  .btn-primary { @apply bg-brand text-white hover:bg-brand-accent; }
+  .card { @apply bg-white rounded-xl shadow-sm border border-gray-200 p-5; }
+  .badge { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium; }
+  .badge-green { @apply bg-green-100 text-green-700; }
+  .badge-red { @apply bg-red-100 text-red-700; }
+  .sidebar-link { @apply flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 transition; }
+  /* Avoid !important inside @apply; override via higher specificity */
+  .sidebar-link-active { @apply bg-highlight text-gray-900 hover:bg-highlight/90; }
+  .breadcrumb { @apply text-sm text-gray-600; }
+}
+
+/* Utilities */
+@layer utilities {
+  .scrollbar-thin { scrollbar-width: thin; }
+}
