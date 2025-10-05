@@ -1,0 +1,8 @@
+{{#if items}}
+<nav class="breadcrumb flex items-center gap-2 mb-4" aria-label="Breadcrumb">
+  {{#each items}}
+    <a href="{{this.url}}" class="hover:underline text-brand-accent">{{this.label}}</a>
+    {{#unless @last}}<span class="mx-1 text-gray-400">/</span>{{/unless}}
+  {{/each}}
+</nav>
+{{/if}}

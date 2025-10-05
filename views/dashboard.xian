@@ -1,3 +1,8 @@
+{{#set 'breadcrumbs'}}
+  [
+    { "label": "Dashboard", "url": "/dashboard" }
+  ]
+{{/set}}
 <section class="space-y-8">
   <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
     <div class="card">

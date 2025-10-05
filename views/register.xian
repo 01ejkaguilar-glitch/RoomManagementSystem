@@ -1,13 +1,15 @@
-{{> head}}
-<body class="bg-gray-50">
-  <div class="flex justify-center mt-10">
-    <form class="flex flex-col w-96 p-6 border rounded-lg shadow" method="POST" action="/register">
-      <h2 class="text-xl font-bold mb-4 text-center">Register</h2>
-      <input type="text" name="name" placeholder="Name" class="mb-2 p-2 border rounded" required />
-      <input type="email" name="email" placeholder="Email" class="mb-2 p-2 border rounded" required />
-      <input type="password" name="password" placeholder="Password" class="mb-2 p-2 border rounded" required />
-      <button type="submit" class="bg-green-500 text-white p-2 rounded">Register</button>
-      <a href="/login" class="text-blue-700 mt-2 text-center">Already have an account? Login</a>
-    </form>
-  </div>
-<%- include('partials/footer') %>
+{{#set 'breadcrumbs'}}
+  [
+    { "label": "Register", "url": "/register" }
+  ]
+{{/set}}
+<section class="flex justify-center items-center min-h-[60vh]">
+  <form class="flex flex-col w-96 p-8 bg-white rounded-xl shadow-md border" method="POST" action="/register">
+    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+    <input type="text" name="name" placeholder="Name" class="mb-3 p-2 border rounded" required />
+    <input type="email" name="email" placeholder="Email" class="mb-3 p-2 border rounded" required />
+    <input type="password" name="password" placeholder="Password" class="mb-3 p-2 border rounded" required />
+    <button type="submit" class="btn btn-primary mb-2">Register</button>
+    <a href="/login" class="text-brand-accent mt-2 text-center">Already have an account? Login</a>
+  </form>
+</section>

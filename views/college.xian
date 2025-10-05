@@ -1,10 +1,12 @@
-{{> head}}
-<body class="bg-gray-50">
-  <div class="text-center mt-20">
-    <h2 class="text-2xl">Dashboard</h2>
-    <p class="mt-4">Welcome to your dashboard!</p>
-    <div class="mt-6">
-      <a href="/logout" class="text-red-600 font-medium">Logout</a>
-    </div>
-  </div>
-<%- include('partials/footer') %>
+{{#set 'breadcrumbs'}}
+  [
+    { "label": "Dashboard", "url": "/dashboard" },
+    { "label": "Colleges", "url": "/colleges" },
+    { "label": "College Details", "url": "#" }
+  ]
+{{/set}}
+<section>
+  <h2 class="text-2xl font-bold mb-6">College Details</h2>
+  <!-- TODO: College details, buildings list -->
+  <div class="bg-white rounded-xl shadow-sm p-6 text-gray-500 text-center">College details UI coming soon.</div>
+</section>

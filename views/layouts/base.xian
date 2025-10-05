@@ -6,6 +6,7 @@
       {{> topbar pageTitle=title breadcrumbs=breadcrumbs}}
       <main class="p-6 space-y-6">
         {{> alerts}}
+        {{> breadcrumbs items=breadcrumbs}}
         {{{ body }}}
       </main>
       {{> footer}}
